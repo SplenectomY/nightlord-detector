@@ -3,13 +3,39 @@
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass
+from pathlib import Path
 
 import mss
 import numpy as np
 from PIL import Image, ImageFilter, ImageOps
 
+from .paths import resource_path
+
 log = logging.getLogger("nightlord-detector")
+
+
+def configure_tesseract() -> Path | None:
+    candidates = [
+        resource_path("resources", "Tesseract-OCR", "tesseract.exe"),
+        Path(os.environ.get("TESSERACT_PATH", "")),
+        Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe"),
+        Path(r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"),
+    ]
+    try:
+        import pytesseract
+    except Exception:
+        return None
+
+    for path in candidates:
+        if path and path.is_file():
+            pytesseract.pytesseract.tesseract_cmd = str(path)
+            tessdata = path.parent / "tessdata"
+            if tessdata.is_dir():
+                os.environ.setdefault("TESSDATA_PREFIX", str(tessdata))
+            return path
+    return None
 
 
 @dataclass
@@ -49,6 +75,7 @@ def preprocess(image: Image.Image) -> Image.Image:
 
 def ocr_image(image: Image.Image) -> tuple[str, str]:
     processed = preprocess(image)
+    configure_tesseract()
     try:
         import pytesseract
 
@@ -57,7 +84,7 @@ def ocr_image(image: Image.Image) -> tuple[str, str]:
             config="--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'&- ",
         )
         return "tesseract", " ".join(text.split())
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         log.debug("Tesseract unavailable: %s", exc)
 
     try:
@@ -66,7 +93,7 @@ def ocr_image(image: Image.Image) -> tuple[str, str]:
         result = recognize_pil_sync(image)
         text = getattr(result, "text", None) or str(result)
         return "winocr", " ".join(str(text).split())
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         log.debug("winocr unavailable: %s", exc)
 
     return "none", ""
