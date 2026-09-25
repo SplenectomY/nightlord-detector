@@ -5,6 +5,8 @@ from __future__ import annotations
 import sys
 import tkinter as tk
 
+from .config import OverlayLayout
+
 
 GWL_EXSTYLE = -20
 WS_EX_LAYERED = 0x00080000
@@ -29,15 +31,15 @@ def _apply_clickthrough(hwnd: int) -> None:
 
 
 class OverlayWindow:
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, layout: OverlayLayout | None = None):
+        self.layout = layout or OverlayLayout()
         self.win = tk.Toplevel(root)
         self.win.title("nightlord-detector overlay")
-        self.win.geometry("520x180+40+40")
         self.win.configure(bg="#010101")
         self.win.attributes("-topmost", True)
         self.win.overrideredirect(True)
         try:
-            self.win.attributes("-alpha", 0.82)
+            self.win.attributes("-alpha", 0.78)
             self.win.wm_attributes("-transparentcolor", "#010101")
         except tk.TclError:
             pass
@@ -45,15 +47,16 @@ class OverlayWindow:
         self.label = tk.Label(
             self.win,
             text="Possible Nightlords:\nwaiting for Night 1...",
-            justify="left",
-            anchor="nw",
-            font=("Consolas", 14, "bold"),
+            justify="center",
+            anchor="s",
+            font=("Consolas", 13, "bold"),
             fg="#F3E2B2",
             bg="#1A1208",
-            padx=16,
-            pady=12,
+            padx=14,
+            pady=6,
         )
         self.label.pack(fill="both", expand=True)
+        self.win.after(50, self.apply_layout)
         self.win.after(200, self._clickthrough)
 
     def _clickthrough(self) -> None:
@@ -61,7 +64,29 @@ class OverlayWindow:
             self.win.update_idletasks()
             _apply_clickthrough(int(self.win.winfo_id()))
         except Exception:
-            _apply_clickthrough(int(self.win.winfo_id()))
+            pass
+
+    def apply_layout(self, layout: OverlayLayout | None = None) -> None:
+        if layout is not None:
+            self.layout = layout
+        self.win.update_idletasks()
+        screen_w = self.win.winfo_screenwidth()
+        screen_h = self.win.winfo_screenheight()
+        width = max(240, int(self.layout.width))
+        height = max(48, int(self.layout.height))
+        x = (screen_w - width) // 2 + int(self.layout.x_offset)
+        y = screen_h - height - max(0, int(self.layout.margin_bottom))
+        x = max(0, min(x, screen_w - width))
+        y = max(0, min(y, screen_h - height))
+        self.win.geometry(f"{width}x{height}+{x}+{y}")
+        self.win.attributes("-topmost", True)
+
+    def hardcoded_snippet(self) -> str:
+        lay = self.layout
+        return (
+            f"OverlayLayout(x_offset={lay.x_offset}, margin_bottom={lay.margin_bottom}, "
+            f"width={lay.width}, height={lay.height})"
+        )
 
     def set_text(self, text: str) -> None:
         self.label.configure(text=text)
@@ -69,6 +94,6 @@ class OverlayWindow:
     def set_visible(self, visible: bool) -> None:
         if visible:
             self.win.deiconify()
-            self.win.attributes("-topmost", True)
+            self.apply_layout()
         else:
             self.win.withdraw()
