@@ -9,7 +9,8 @@ import threading
 import time
 import tkinter as tk
 
-from .capture import Roi, grab_roi, ocr_image
+from .capture import Roi, configure_tesseract, grab_roi, ocr_image
+from .config import OverlayLayout, load_config, save_config
 from .debug_console import DebugConsole
 from .match import match_boss, rank_bosses
 from .overlay import OverlayWindow
@@ -22,13 +23,15 @@ class DetectorApp:
     def __init__(self, poll_hz: float = 2.0, monitor: int = 1, debug: bool = True):
         self.poll_hz = poll_hz
         self.monitor = monitor
-        self.roi = Roi()
+        self.cfg = load_config()
+        self.roi = Roi(self.cfg.roi_left, self.cfg.roi_top, self.cfg.roi_width, self.cfg.roi_height)
         self.scanning = True
         self.night1: str | None = None
         self.night2: str | None = None
         self.depth = "any"
         self.last_match_key: tuple[int, str] | None = None
         self._stop = threading.Event()
+        found = configure_tesseract()
 
         self.root = tk.Tk()
         self.root.title("nightlord-detector")
@@ -42,7 +45,7 @@ class DetectorApp:
         )
         ttk_label.pack(padx=16, pady=16)
 
-        self.overlay = OverlayWindow(self.root)
+        self.overlay = OverlayWindow(self.root, self.cfg.overlay)
         self.debug = DebugConsole(
             self.root,
             on_assign_n1=self.assign_n1,
@@ -50,14 +53,21 @@ class DetectorApp:
             on_depth=self.set_depth,
             on_reset=self.reset_run,
             on_roi=self.set_roi,
+            on_overlay_layout=self.set_overlay_layout,
+            on_save_config=self.persist_config,
             on_toggle_scan=self.set_scanning,
             initial_roi=(self.roi.left, self.roi.top, self.roi.width, self.roi.height),
+            initial_overlay=self.cfg.overlay or OverlayLayout(),
         )
         if not debug:
             self.debug.hide()
 
         self._bind_hotkeys()
         self._refresh_overlay()
+        if found:
+            self.root.after(0, lambda: self._log(f"Tesseract: {found}"))
+        else:
+            self.root.after(0, lambda: self._log("Tesseract not bundled; OCR needs a system install or a packaged EXE."))
 
         self.worker = threading.Thread(target=self._loop, name="ocr-loop", daemon=True)
         self.worker.start()
@@ -89,7 +99,7 @@ class DetectorApp:
             self._listener.daemon = True
             self._listener.start()
             self._log("Global hotkeys armed via pynput.")
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             self._listener = None
             self._log(f"pynput unavailable ({exc}); F-keys work when a detector window is focused.")
 
@@ -99,6 +109,17 @@ class DetectorApp:
 
     def set_roi(self, left: float, top: float, width: float, height: float) -> None:
         self.roi = Roi(left, top, width, height)
+        self.cfg.roi_left, self.cfg.roi_top, self.cfg.roi_width, self.cfg.roi_height = left, top, width, height
+
+    def set_overlay_layout(self, layout: OverlayLayout) -> None:
+        self.cfg.overlay = layout
+        self.overlay.apply_layout(layout)
+
+    def persist_config(self) -> None:
+        path = save_config(self.cfg)
+        snippet = self.overlay.hardcoded_snippet()
+        self._log(f"Saved {path}")
+        self._log(f"Hardcode this default: {snippet}")
 
     def set_scanning(self, enabled: bool) -> None:
         self.scanning = enabled
@@ -170,7 +191,6 @@ class DetectorApp:
                     image = grab_roi(self.roi, self.monitor)
                     engine, text = ocr_image(image)
                     self._last_raw = text
-                    match = match_boss(text) if text else None
                     ranks = rank_bosses(text) if text else []
                     rank_text = "\n".join(
                         f"{m.score:5.1f}  N{m.night}  {m.key:12}  {m.label}  via '{m.alias}'"
@@ -182,12 +202,13 @@ class DetectorApp:
                         self.debug.set_ranks(rank_text)
 
                     self.root.after(0, publish)
+                    match = match_boss(text) if text else None
                     if match and match.score >= 86:
                         self.root.after(
                             0,
                             lambda m=match: self._maybe_auto_assign(m.night, m.key, m.label, m.score),
                         )
-                except Exception as exc:  # noqa: BLE001
+                except Exception as exc:
                     self._log(f"Scan error: {exc}")
             remaining = interval - (time.time() - started)
             if remaining > 0:
