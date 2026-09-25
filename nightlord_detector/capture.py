@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -17,8 +18,18 @@ log = logging.getLogger("nightlord-detector")
 
 
 def configure_tesseract() -> Path | None:
+    """Prefer a Tesseract shipped next to the EXE, then a system install."""
+    exe_dir = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else None
     candidates = [
         resource_path("resources", "Tesseract-OCR", "tesseract.exe"),
+        *(
+            [
+                exe_dir / "Tesseract-OCR" / "tesseract.exe",
+                exe_dir / "tesseract.exe",
+            ]
+            if exe_dir
+            else []
+        ),
         Path(os.environ.get("TESSERACT_PATH", "")),
         Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe"),
         Path(r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe"),
@@ -84,7 +95,7 @@ def ocr_image(image: Image.Image) -> tuple[str, str]:
             config="--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'&- ",
         )
         return "tesseract", " ".join(text.split())
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         log.debug("Tesseract unavailable: %s", exc)
 
     try:
@@ -93,7 +104,7 @@ def ocr_image(image: Image.Image) -> tuple[str, str]:
         result = recognize_pil_sync(image)
         text = getattr(result, "text", None) or str(result)
         return "winocr", " ".join(str(text).split())
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         log.debug("winocr unavailable: %s", exc)
 
     return "none", ""

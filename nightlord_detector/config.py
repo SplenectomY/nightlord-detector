@@ -14,10 +14,13 @@ CONFIG_PATH = user_config_dir() / "config.json"
 
 @dataclass
 class OverlayLayout:
+    # Bottom-center anchor. x_offset shifts left/right. margin_bottom is the gap
+    # from the physical screen edge — keep this tiny so the box sits under the
+    # Nightreign boss plate instead of over the class name / party roster.
     x_offset: int = 0
-    margin_bottom: int = 10
-    width: int = 640
-    height: int = 108
+    margin_bottom: int = 8
+    width: int = 720
+    height: int = 64
 
 
 @dataclass
@@ -33,6 +36,21 @@ class AppConfig:
             self.overlay = OverlayLayout()
         elif isinstance(self.overlay, dict):
             self.overlay = OverlayLayout(**self.overlay)
+
+
+def compute_overlay_rect(
+    screen_w: int,
+    screen_h: int,
+    layout: OverlayLayout,
+) -> tuple[int, int, int, int]:
+    """Return (x, y, width, height) pinned to the bottom-center strip."""
+    width = max(240, int(layout.width))
+    height = max(40, int(layout.height))
+    x = (screen_w - width) // 2 + int(layout.x_offset)
+    y = screen_h - height - max(0, int(layout.margin_bottom))
+    x = max(0, min(x, max(0, screen_w - width)))
+    y = max(0, min(y, max(0, screen_h - height)))
+    return x, y, width, height
 
 
 def load_config() -> AppConfig:

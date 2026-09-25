@@ -1,10 +1,13 @@
 # Build a one-file Windows EXE the same way NightreignArmamentHelper does:
 # vendor Tesseract into resources/, then freeze with PyInstaller.
+# If Inno Setup (ISCC.exe) is installed, also wrap that EXE in an installer.
 #
 # From a Developer PowerShell in the repo root:
 #   python -m venv .venv
 #   .\.venv\Scripts\Activate.ps1
 #   pip install -r requirements.txt
+#   winget install UB-Mannheim.TesseractOCR
+#   winget install JRSoftware.InnoSetup   # optional, for the Setup.exe
 #   powershell -File scripts\build_windows.ps1
 
 $ErrorActionPreference = "Stop"
@@ -23,8 +26,16 @@ $TessDst = Join-Path $Root "resources\Tesseract-OCR"
 if ($TessSrc) {
     Write-Host "Bundling Tesseract from $TessSrc"
     New-Item -ItemType Directory -Force -Path (Split-Path $TessDst) | Out-Null
-    if ((Resolve-Path $TessSrc).Path -ne (Resolve-Path -ErrorAction SilentlyContinue $TessDst).Path) {
+    $srcResolved = (Resolve-Path $TessSrc).Path
+    $dstResolved = $null
+    if (Test-Path $TessDst) {
+        $dstResolved = (Resolve-Path $TessDst).Path
+    }
+    if ($srcResolved -ne $dstResolved) {
         robocopy $TessSrc $TessDst /E /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+        if ($LASTEXITCODE -ge 8) {
+            throw "robocopy failed copying Tesseract (exit $LASTEXITCODE)"
+        }
     }
 } else {
     Write-Warning "tesseract.exe not found. The EXE will still build, but OCR needs a system Tesseract or a copy under resources\Tesseract-OCR."
@@ -33,11 +44,40 @@ if ($TessSrc) {
 
 python -m pip install -q pyinstaller
 python -m PyInstaller --noconfirm --clean nightlord-detector.spec
+if ($LASTEXITCODE -ne 0) {
+    throw "PyInstaller failed with exit $LASTEXITCODE"
+}
 
 $Built = Join-Path $Root "dist\nightlord-detector.exe"
-if (Test-Path $Built) {
-    Write-Host "Built $Built"
-    Write-Host "Copy that single file. No Python or Tesseract install required on the target PC if Tesseract was bundled."
-} else {
+if (-not (Test-Path $Built)) {
     throw "PyInstaller finished but dist\nightlord-detector.exe is missing."
+}
+
+Write-Host "Portable EXE: $Built"
+Write-Host "Copy that single file. No Python or Tesseract install is required on the target PC if Tesseract was bundled."
+
+$IsccCandidates = @(
+    "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+    "$env:ProgramFiles\Inno Setup 6\ISCC.exe",
+    "${env:LOCALAPPDATA}\Programs\Inno Setup 6\ISCC.exe"
+)
+$Iscc = $IsccCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+if (-not $Iscc) {
+    $cmd = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+    if ($cmd) { $Iscc = $cmd.Source }
+}
+
+if ($Iscc) {
+    Write-Host "Building installer with $Iscc"
+    & $Iscc (Join-Path $Root "scripts\installer.iss")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Inno Setup failed with exit $LASTEXITCODE"
+    }
+    $Setup = Join-Path $Root "dist\NightlordDetectorSetup.exe"
+    if (Test-Path $Setup) {
+        Write-Host "Installer: $Setup"
+    }
+} else {
+    Write-Host "Inno Setup not found — skipped NightlordDetectorSetup.exe."
+    Write-Host "Install it with: winget install JRSoftware.InnoSetup"
 }

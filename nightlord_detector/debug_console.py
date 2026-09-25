@@ -64,7 +64,12 @@ class DebugConsole:
         row3 = ttk.Frame(self.win)
         row3.pack(fill="x", **pad)
         ttk.Label(row3, text="Depth").pack(side="left")
-        self.depth = ttk.Combobox(row3, values=["any", "d1", "d2", "d3", "d4", "d5"], width=8, state="readonly")
+        self.depth = ttk.Combobox(
+            row3,
+            values=["any", "d1", "d2", "d3", "d4", "d5"],
+            width=8,
+            state="readonly",
+        )
         self.depth.set("any")
         self.depth.pack(side="left", padx=6)
         self.depth.bind("<<ComboboxSelected>>", lambda _e: on_depth(self.depth.get()))
@@ -73,10 +78,20 @@ class DebugConsole:
         btns.pack(fill="x", **pad)
         ttk.Button(btns, text="Reset run", command=on_reset).pack(side="left", padx=4)
         self.scan_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(btns, text="Scan screen", variable=self.scan_var, command=lambda: on_toggle_scan(self.scan_var.get())).pack(side="left", padx=4)
+        ttk.Checkbutton(
+            btns,
+            text="Scan screen",
+            variable=self.scan_var,
+            command=lambda: on_toggle_scan(self.scan_var.get()),
+        ).pack(side="left", padx=4)
         ttk.Button(btns, text="Save layout to config", command=on_save_config).pack(side="left", padx=4)
 
-        ttk.Label(self.win, text="Overlay position (bottom-center anchor)").pack(anchor="w", **pad)
+        ttk.Label(self.win, text="Overlay position (bottom-center, under the boss HP bar)").pack(anchor="w", **pad)
+        ttk.Label(
+            self.win,
+            text="Drag sliders to move the live overlay. Save layout, then paste the printed OverlayLayout(...) into config.py to hardcode it.",
+            wraplength=720,
+        ).pack(anchor="w", padx=8)
         self.overlay_values = tk.StringVar(value="")
         ttk.Label(self.win, textvariable=self.overlay_values).pack(anchor="w", padx=8)
         self.overlay_sliders: dict[str, tk.Scale] = {}
@@ -87,7 +102,16 @@ class DebugConsole:
             ("height", 48, 280, 1, initial_overlay.height),
         )
         for name, lo, hi, res, value in overlay_specs:
-            slider = tk.Scale(self.win, from_=lo, to=hi, resolution=res, orient="horizontal", label=name, length=700, command=lambda _v: self._emit_overlay())
+            slider = tk.Scale(
+                self.win,
+                from_=lo,
+                to=hi,
+                resolution=res,
+                orient="horizontal",
+                label=name,
+                length=700,
+                command=lambda _v: self._emit_overlay(),
+            )
             slider.set(value)
             slider.pack(fill="x", padx=8)
             self.overlay_sliders[name] = slider
@@ -98,8 +122,19 @@ class DebugConsole:
         names = ("left", "top", "width", "height")
         for name, value in zip(names, initial_roi):
             slider = tk.Scale(
-                self.win, from_=0.0, to=1.0, resolution=0.01, orient="horizontal", label=f"roi_{name}", length=700,
-                command=lambda _v, cb=on_roi: cb(self.sliders["left"].get(), self.sliders["top"].get(), self.sliders["width"].get(), self.sliders["height"].get()),
+                self.win,
+                from_=0.0,
+                to=1.0,
+                resolution=0.01,
+                orient="horizontal",
+                label=f"roi_{name}",
+                length=700,
+                command=lambda _v, cb=on_roi: cb(
+                    self.sliders["left"].get(),
+                    self.sliders["top"].get(),
+                    self.sliders["width"].get(),
+                    self.sliders["height"].get(),
+                ),
             )
             slider.set(value)
             slider.pack(fill="x", padx=8)
@@ -108,7 +143,11 @@ class DebugConsole:
         ttk.Label(self.win, text="Log").pack(anchor="w", **pad)
         self.log = tk.Text(self.win, height=8, width=94, bg="#141414", fg="#c8f5c8")
         self.log.pack(fill="both", expand=True, **pad)
-        ttk.Label(self.win, text="F6 Night 1   F7 Night 2   F8 overlay   F9 debug   F10 reset").pack(anchor="w", **pad)
+
+        ttk.Label(
+            self.win,
+            text="F6 Night 1   F7 Night 2   F8 overlay   F9 debug   F10 reset",
+        ).pack(anchor="w", **pad)
 
     def current_overlay(self) -> OverlayLayout:
         return OverlayLayout(
@@ -121,7 +160,8 @@ class DebugConsole:
     def _emit_overlay(self) -> None:
         layout = self.current_overlay()
         self.overlay_values.set(
-            f"OverlayLayout(x_offset={layout.x_offset}, margin_bottom={layout.margin_bottom}, width={layout.width}, height={layout.height})"
+            f"OverlayLayout(x_offset={layout.x_offset}, margin_bottom={layout.margin_bottom}, "
+            f"width={layout.width}, height={layout.height})"
         )
         self._on_overlay_layout(layout)
 
@@ -141,7 +181,8 @@ class DebugConsole:
             cb(key)
 
     def set_ocr(self, engine: str, text: str) -> None:
-        self.ocr_var.set(f"engine: {engine}    raw: {text if text else '(empty)'}")
+        shown = text if text else "(empty)"
+        self.ocr_var.set(f"engine: {engine}    raw: {shown}")
 
     def set_ranks(self, lines: str) -> None:
         self.rank.delete("1.0", "end")

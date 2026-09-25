@@ -1,21 +1,43 @@
-"""Click-through always-on-top overlay. Separate process window — no game hooks."""
+"""Click-through always-on-top overlay. Separate process window — no game hooks.
+
+Anchored bottom-center, just above the physical screen edge, so it sits under the
+Nightreign boss plate instead of over the class name / party list.
+"""
 
 from __future__ import annotations
 
 import sys
 import tkinter as tk
 
-from .config import OverlayLayout
-
+from .config import OverlayLayout, compute_overlay_rect
 
 GWL_EXSTYLE = -20
 WS_EX_LAYERED = 0x00080000
 WS_EX_TRANSPARENT = 0x00000020
 WS_EX_TOOLWINDOW = 0x00000080
 HWND_TOPMOST = -1
-SWP_NOMOVE = 0x0002
-SWP_NOSIZE = 0x0001
 SWP_SHOWWINDOW = 0x0040
+SM_CXSCREEN = 0
+SM_CYSCREEN = 1
+
+
+def _screen_size(fallback_w: int, fallback_h: int) -> tuple[int, int]:
+    if sys.platform == "win32":
+        try:
+            import ctypes
+
+            user32 = ctypes.windll.user32
+            try:
+                user32.SetProcessDPIAware()
+            except Exception:
+                pass
+            w = int(user32.GetSystemMetrics(SM_CXSCREEN))
+            h = int(user32.GetSystemMetrics(SM_CYSCREEN))
+            if w > 0 and h > 0:
+                return w, h
+        except Exception:
+            pass
+    return max(1, fallback_w), max(1, fallback_h)
 
 
 def _apply_clickthrough(hwnd: int) -> None:
@@ -27,7 +49,22 @@ def _apply_clickthrough(hwnd: int) -> None:
     style = user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
     style |= WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW
     user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
-    user32.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW)
+
+
+def _move_hwnd(hwnd: int, x: int, y: int, width: int, height: int) -> None:
+    if sys.platform != "win32":
+        return
+    import ctypes
+
+    ctypes.windll.user32.SetWindowPos(
+        hwnd,
+        HWND_TOPMOST,
+        int(x),
+        int(y),
+        int(width),
+        int(height),
+        SWP_SHOWWINDOW,
+    )
 
 
 class OverlayWindow:
@@ -39,7 +76,7 @@ class OverlayWindow:
         self.win.attributes("-topmost", True)
         self.win.overrideredirect(True)
         try:
-            self.win.attributes("-alpha", 0.78)
+            self.win.attributes("-alpha", 0.88)
             self.win.wm_attributes("-transparentcolor", "#010101")
         except tk.TclError:
             pass
@@ -48,38 +85,56 @@ class OverlayWindow:
             self.win,
             text="Possible Nightlords:\nwaiting for Night 1...",
             justify="center",
-            anchor="s",
-            font=("Consolas", 13, "bold"),
-            fg="#F3E2B2",
-            bg="#1A1208",
-            padx=14,
-            pady=6,
+            anchor="center",
+            font=("Segoe UI", 12, "bold"),
+            fg="#E8D7A4",
+            bg="#120E08",
+            padx=16,
+            pady=4,
         )
         self.label.pack(fill="both", expand=True)
+        self.apply_layout()
         self.win.after(50, self.apply_layout)
         self.win.after(200, self._clickthrough)
+        self.win.bind("<Map>", lambda _e: self.apply_layout())
 
-    def _clickthrough(self) -> None:
+    def _hwnd(self) -> int | None:
         try:
             self.win.update_idletasks()
-            _apply_clickthrough(int(self.win.winfo_id()))
+            return int(self.win.winfo_id())
+        except Exception:
+            return None
+
+    def _clickthrough(self) -> None:
+        hwnd = self._hwnd()
+        if hwnd is None:
+            return
+        try:
+            _apply_clickthrough(hwnd)
+            self.apply_layout()
         except Exception:
             pass
 
     def apply_layout(self, layout: OverlayLayout | None = None) -> None:
         if layout is not None:
             self.layout = layout
-        self.win.update_idletasks()
-        screen_w = self.win.winfo_screenwidth()
-        screen_h = self.win.winfo_screenheight()
-        width = max(240, int(self.layout.width))
-        height = max(48, int(self.layout.height))
-        x = (screen_w - width) // 2 + int(self.layout.x_offset)
-        y = screen_h - height - max(0, int(self.layout.margin_bottom))
-        x = max(0, min(x, screen_w - width))
-        y = max(0, min(y, screen_h - height))
+        try:
+            self.win.update_idletasks()
+        except Exception:
+            return
+        screen_w, screen_h = _screen_size(
+            self.win.winfo_screenwidth(),
+            self.win.winfo_screenheight(),
+        )
+        x, y, width, height = compute_overlay_rect(screen_w, screen_h, self.layout)
         self.win.geometry(f"{width}x{height}+{x}+{y}")
         self.win.attributes("-topmost", True)
+        hwnd = self._hwnd()
+        if hwnd is not None:
+            try:
+                _move_hwnd(hwnd, x, y, width, height)
+            except Exception:
+                pass
 
     def hardcoded_snippet(self) -> str:
         lay = self.layout
@@ -90,6 +145,7 @@ class OverlayWindow:
 
     def set_text(self, text: str) -> None:
         self.label.configure(text=text)
+        self.win.attributes("-topmost", True)
 
     def set_visible(self, visible: bool) -> None:
         if visible:

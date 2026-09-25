@@ -17,10 +17,33 @@ That is the lowest-risk design against Easy Anti-Cheat. It is still not a FromSo
 ## Requirements
 
 - Windows, borderless-windowed Nightreign (exclusive fullscreen fights the overlay)
-- Python 3.11+
-- [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) on PATH (`tesseract --version` should work)
+- Python 3.11+ if you run from source
+- [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) only for source runs. A packaged EXE can vendor it.
 
-## Install
+## One-file EXE and installer
+
+Same model as [NightreignArmamentHelper](https://github.com/AfonsoG6/NightreignArmamentHelper): PyInstaller freezes the app and copies `tesseract.exe` into `resources/Tesseract-OCR` so the target PC does not need Python or a Tesseract installer.
+
+```powershell
+# once, on the build machine
+winget install UB-Mannheim.TesseractOCR
+winget install JRSoftware.InnoSetup   # optional, only for Setup.exe
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+powershell -File scripts\build_windows.ps1
+```
+
+Outputs:
+
+| File | What to ship |
+|---|---|
+| `dist\nightlord-detector.exe` | Portable. Copy this one file. No install step. |
+| `dist\NightlordDetectorSetup.exe` | Optional Inno Setup wrapper: Start Menu shortcut, uninstall entry, installs under `%LOCALAPPDATA%\Nightlord Detector`. Built only if Inno Setup is installed. |
+
+Players who just want “drop an EXE next to the game” should take the portable file.
+
+## Install from source
 
 ```powershell
 git clone https://github.com/SplenectomY/nightlord-detector.git
@@ -38,6 +61,25 @@ python -m nightlord_detector --no-debug
 python -m nightlord_detector --hz 1.5 --monitor 1
 ```
 
+## Overlay placement
+
+Default is **bottom-center**, 8 px off the physical screen edge, under the Nightreign boss plate — not over the class name or the party list.
+
+If you still see the old top-left box, you are on a previous build or a leftover `%LOCALAPPDATA%\nightlord-detector\config.json`. Delete that file, pull `main`, and restart.
+
+Tune it live in the debug console. The overlay moves while you drag:
+
+- `x_offset` — pixels left (−) or right (+) from center
+- `margin_bottom` — pixels up from the physical bottom edge (keep this small)
+- `width` / `height` — box size
+
+The exact constructor line is shown under those sliders. **Save layout to config** writes `%LOCALAPPDATA%\nightlord-detector\config.json` and prints a snippet like:
+
+```
+OverlayLayout(x_offset=0, margin_bottom=8, width=720, height=64)
+```
+
+That snippet is the hardcoded default to drop into `nightlord_detector/config.py` once it looks right on your resolution.
 ## Windows
 
 | Window | Purpose |
