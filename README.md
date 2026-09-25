@@ -26,7 +26,7 @@ That is the lowest-risk design against Easy Anti-Cheat. It is still not a FromSo
 git clone https://github.com/SplenectomY/nightlord-detector.git
 cd nightlord-detector
 python -m venv .venv
-.\ .venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python -m nightlord_detector
 ```
