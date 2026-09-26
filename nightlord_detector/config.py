@@ -30,6 +30,7 @@ class AppConfig:
     roi_width: float = 0.44
     roi_height: float = 0.10
     overlay: OverlayLayout | None = None
+    language: str = "en"
 
     def __post_init__(self) -> None:
         if self.overlay is None:
@@ -74,6 +75,7 @@ def save_config(cfg: AppConfig) -> Path:
         "roi_width": cfg.roi_width,
         "roi_height": cfg.roi_height,
         "overlay": asdict(cfg.overlay or OverlayLayout()),
+        "language": cfg.language,
     }
     CONFIG_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return CONFIG_PATH

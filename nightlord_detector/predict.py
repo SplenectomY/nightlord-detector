@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
+from .paths import resource_path
 
-DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "nightlord_tables.json"
+
+DATA_PATH = resource_path("data", "nightlord_tables.json")
 
 
 @lru_cache(maxsize=1)
@@ -130,21 +131,24 @@ def predict(
 
 
 def format_overlay(prediction: Prediction, max_rows: int = 6) -> str:
+    from .i18n import lord_name, t, weakness_name
+
     if not prediction.night1_key:
-        return "Possible Nightlords:\nwaiting for Night 1..."
+        return f"{t('overlay.header')}\n{t('overlay.waiting')}"
     if not prediction.guesses:
         return prediction.message
-    lines = ["Possible Nightlords:"]
+    lines = [t("overlay.header")]
     for guess in prediction.guesses[:max_rows]:
+        name = lord_name(guess.key, guess.name)
         extra = ""
         if guess.weakness:
-            extra = f"  [{guess.weakness}]"
+            extra = f"  [{weakness_name(guess.weakness)}]"
         ed = ""
         if guess.everdark_pct > 0 and guess.regular_pct > 0:
             ed = f"  (ED {guess.everdark_pct:.0f}%)"
         elif guess.everdark_pct > 0 and guess.regular_pct <= 0:
-            ed = "  (Everdark)"
-        lines.append(f"{guess.pct:5.1f}%  {guess.name}{extra}{ed}")
+            ed = f"  ({t('overlay.everdark')})"
+        lines.append(f"{guess.pct:5.1f}%  {name}{extra}{ed}")
     if prediction.locked:
-        lines[0] = f"Nightlord: {prediction.guesses[0].name}"
+        lines[0] = t("overlay.nightlord", name=lord_name(prediction.guesses[0].key, prediction.guesses[0].name))
     return "\n".join(lines)

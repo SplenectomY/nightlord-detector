@@ -60,7 +60,7 @@ pip install -r requirements.txt
 python -m nightlord_detector
 ```
 
-The debug console opens by default.
+The debug console opens by default. Pick the UI language on the small controller window; it is saved to `%LOCALAPPDATA%\nightlord-detector\config.json` and also selects the Tesseract language pack when that traineddata is bundled.
 
 ```powershell
 python -m nightlord_detector --no-debug
@@ -101,7 +101,7 @@ That snippet is the hardcoded default to drop into `nightlord_detector/config.py
 | F6 | Assign the current OCR hit as Night 1 |
 | F7 | Assign the current OCR hit as Night 2 |
 | F8 | Toggle overlay |
-| F9 | Toggle debug console |
+| F9 | Toggle debug console (global hotkey only — no double-toggle when the controller is focused) |
 | F10 | Reset the run |
 
 If the first Night 1-class title stays on screen long enough at ≥86 match score, it is auto-assigned. A later different title becomes Night 2.
@@ -116,7 +116,7 @@ If OCR is garbage:
 2. Drag the ROI sliders until `raw:` shows something like `Bell Bearing Hunter`.
 3. Confirm the ranked list highlights the right key.
 
-English UI only for now. Aliases cover duo nameplates (`Demi-Human Queen`, `Godskin Apostle`, `Mohg, Lord of Blood`, …).
+English nameplates are the most reliable OCR target today. Other UI languages switch Tesseract to `jpn` / `chi_sim` / `kor` / etc. when that traineddata is present; matching still uses the English alias list plus CJK-safe normalization. Aliases cover duo nameplates (`Demi-Human Queen`, `Godskin Apostle`, `Mohg, Lord of Blood`, …).
 
 ## What it will and will not detect
 

@@ -7,6 +7,7 @@ from tkinter import ttk
 from typing import Callable
 
 from .config import OverlayLayout
+from .i18n import t
 from .predict import load_tables
 
 
@@ -26,20 +27,18 @@ class DebugConsole:
         initial_overlay: OverlayLayout,
     ):
         self.win = tk.Toplevel(root)
-        self.win.title("nightlord-detector debug")
         self.win.geometry("760x820+580+40")
         self.win.configure(bg="#111111")
         self.win.protocol("WM_DELETE_WINDOW", self.win.withdraw)
         self._on_overlay_layout = on_overlay_layout
-
-        tables = load_tables()
-        n1_values = [f"{k} — {v['label']}" for k, v in tables["night1"].items()]
-        n2_values = [f"{k} — {v['label']}" for k, v in tables["night2"].items()]
+        self._on_assign_n1 = on_assign_n1
+        self._on_assign_n2 = on_assign_n2
 
         pad = {"padx": 8, "pady": 4}
 
-        ttk.Label(self.win, text="Live OCR / matcher").pack(anchor="w", **pad)
-        self.ocr_var = tk.StringVar(value="engine: starting...")
+        self.lbl_live = ttk.Label(self.win)
+        self.lbl_live.pack(anchor="w", **pad)
+        self.ocr_var = tk.StringVar(value="")
         ttk.Label(self.win, textvariable=self.ocr_var, wraplength=720).pack(anchor="w", **pad)
 
         self.rank = tk.Text(self.win, height=6, width=94, bg="#1c1c1c", fg="#dddddd")
@@ -47,23 +46,24 @@ class DebugConsole:
 
         row = ttk.Frame(self.win)
         row.pack(fill="x", **pad)
-        ttk.Label(row, text="Night 1").pack(side="left")
-        self.n1 = ttk.Combobox(row, values=["(auto)"] + n1_values, width=48, state="readonly")
-        self.n1.set("(auto)")
+        self.lbl_n1 = ttk.Label(row)
+        self.lbl_n1.pack(side="left")
+        self.n1 = ttk.Combobox(row, width=48, state="readonly")
         self.n1.pack(side="left", padx=6)
-        self.n1.bind("<<ComboboxSelected>>", lambda _e: self._fire_n1(on_assign_n1))
+        self.n1.bind("<<ComboboxSelected>>", lambda _e: self._fire_n1(self._on_assign_n1))
 
         row2 = ttk.Frame(self.win)
         row2.pack(fill="x", **pad)
-        ttk.Label(row2, text="Night 2").pack(side="left")
-        self.n2 = ttk.Combobox(row2, values=["(auto / unseen)"] + n2_values, width=48, state="readonly")
-        self.n2.set("(auto / unseen)")
+        self.lbl_n2 = ttk.Label(row2)
+        self.lbl_n2.pack(side="left")
+        self.n2 = ttk.Combobox(row2, width=48, state="readonly")
         self.n2.pack(side="left", padx=6)
-        self.n2.bind("<<ComboboxSelected>>", lambda _e: self._fire_n2(on_assign_n2))
+        self.n2.bind("<<ComboboxSelected>>", lambda _e: self._fire_n2(self._on_assign_n2))
 
         row3 = ttk.Frame(self.win)
         row3.pack(fill="x", **pad)
-        ttk.Label(row3, text="Depth").pack(side="left")
+        self.lbl_depth = ttk.Label(row3)
+        self.lbl_depth.pack(side="left")
         self.depth = ttk.Combobox(
             row3,
             values=["any", "d1", "d2", "d3", "d4", "d5"],
@@ -76,22 +76,22 @@ class DebugConsole:
 
         btns = ttk.Frame(self.win)
         btns.pack(fill="x", **pad)
-        ttk.Button(btns, text="Reset run", command=on_reset).pack(side="left", padx=4)
+        self.btn_reset = ttk.Button(btns, command=on_reset)
+        self.btn_reset.pack(side="left", padx=4)
         self.scan_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(
+        self.chk_scan = ttk.Checkbutton(
             btns,
-            text="Scan screen",
             variable=self.scan_var,
             command=lambda: on_toggle_scan(self.scan_var.get()),
-        ).pack(side="left", padx=4)
-        ttk.Button(btns, text="Save layout to config", command=on_save_config).pack(side="left", padx=4)
+        )
+        self.chk_scan.pack(side="left", padx=4)
+        self.btn_save = ttk.Button(btns, command=on_save_config)
+        self.btn_save.pack(side="left", padx=4)
 
-        ttk.Label(self.win, text="Overlay position (bottom-center, under the boss HP bar)").pack(anchor="w", **pad)
-        ttk.Label(
-            self.win,
-            text="Drag sliders to move the live overlay. Save layout, then paste the printed OverlayLayout(...) into config.py to hardcode it.",
-            wraplength=720,
-        ).pack(anchor="w", padx=8)
+        self.lbl_overlay = ttk.Label(self.win)
+        self.lbl_overlay.pack(anchor="w", **pad)
+        self.lbl_overlay_help = ttk.Label(self.win, wraplength=720)
+        self.lbl_overlay_help.pack(anchor="w", padx=8)
         self.overlay_values = tk.StringVar(value="")
         ttk.Label(self.win, textvariable=self.overlay_values).pack(anchor="w", padx=8)
         self.overlay_sliders: dict[str, tk.Scale] = {}
@@ -117,7 +117,8 @@ class DebugConsole:
             self.overlay_sliders[name] = slider
         self._emit_overlay()
 
-        ttk.Label(self.win, text="Nameplate ROI (fractions of the monitor)").pack(anchor="w", **pad)
+        self.lbl_roi = ttk.Label(self.win)
+        self.lbl_roi.pack(anchor="w", **pad)
         self.sliders: dict[str, tk.Scale] = {}
         names = ("left", "top", "width", "height")
         for name, value in zip(names, initial_roi):
@@ -140,14 +141,51 @@ class DebugConsole:
             slider.pack(fill="x", padx=8)
             self.sliders[name] = slider
 
-        ttk.Label(self.win, text="Log").pack(anchor="w", **pad)
+        self.lbl_log = ttk.Label(self.win)
+        self.lbl_log.pack(anchor="w", **pad)
         self.log = tk.Text(self.win, height=8, width=94, bg="#141414", fg="#c8f5c8")
         self.log.pack(fill="both", expand=True, **pad)
 
-        ttk.Label(
-            self.win,
-            text="F6 Night 1   F7 Night 2   F8 overlay   F9 debug   F10 reset",
-        ).pack(anchor="w", **pad)
+        self.lbl_hotkeys = ttk.Label(self.win)
+        self.lbl_hotkeys.pack(anchor="w", **pad)
+
+        self.apply_locale()
+
+    def apply_locale(self) -> None:
+        self.win.title(t("debug.title"))
+        self.lbl_live.configure(text=t("debug.live_ocr"))
+        if not self.ocr_var.get() or self.ocr_var.get().startswith("engine:"):
+            if "raw:" not in self.ocr_var.get():
+                self.ocr_var.set(t("debug.engine_starting"))
+        self.lbl_n1.configure(text=t("debug.night1"))
+        self.lbl_n2.configure(text=t("debug.night2"))
+        self.lbl_depth.configure(text=t("debug.depth"))
+        self.btn_reset.configure(text=t("debug.reset"))
+        self.chk_scan.configure(text=t("debug.scan"))
+        self.btn_save.configure(text=t("debug.save_layout"))
+        self.lbl_overlay.configure(text=t("debug.overlay_pos"))
+        self.lbl_overlay_help.configure(text=t("debug.overlay_help"))
+        self.lbl_roi.configure(text=t("debug.roi"))
+        self.lbl_log.configure(text=t("debug.log"))
+        self.lbl_hotkeys.configure(text=t("debug.hotkeys"))
+
+        tables = load_tables()
+        n1_key = self._key(self.n1.get()) if getattr(self.n1, "get", None) else None
+        n2_key = self._key(self.n2.get()) if self.n2.get() else None
+        n1_values = [t("debug.auto")] + [f"{k} — {v['label']}" for k, v in tables["night1"].items()]
+        n2_values = [t("debug.auto_unseen")] + [f"{k} — {v['label']}" for k, v in tables["night2"].items()]
+        self.n1.configure(values=n1_values)
+        self.n2.configure(values=n2_values)
+        if n1_key:
+            match = next((item for item in n1_values if item.startswith(n1_key + " ")), n1_values[0])
+            self.n1.set(match)
+        else:
+            self.n1.set(t("debug.auto"))
+        if n2_key:
+            match = next((item for item in n2_values if item.startswith(n2_key + " ")), n2_values[0])
+            self.n2.set(match)
+        else:
+            self.n2.set(t("debug.auto_unseen"))
 
     def current_overlay(self) -> OverlayLayout:
         return OverlayLayout(
@@ -181,8 +219,8 @@ class DebugConsole:
             cb(key)
 
     def set_ocr(self, engine: str, text: str) -> None:
-        shown = text if text else "(empty)"
-        self.ocr_var.set(f"engine: {engine}    raw: {shown}")
+        shown = text if text else t("debug.no_text")
+        self.ocr_var.set(t("debug.engine", engine=engine, text=shown))
 
     def set_ranks(self, lines: str) -> None:
         self.rank.delete("1.0", "end")

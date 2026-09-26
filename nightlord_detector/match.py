@@ -12,11 +12,10 @@ from .predict import load_tables
 
 
 def normalize(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text)
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = unicodedata.normalize("NFKC", text)
     text = text.lower()
     text = text.replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"[^\w]+", " ", text, flags=re.UNICODE)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -42,9 +41,10 @@ def _catalog() -> list[tuple[int, str, str, str, str]]:
 
 def match_boss(raw_text: str, min_score: float = 78.0) -> BossMatch | None:
     cleaned = normalize(raw_text)
-    if len(cleaned) < 4:
+    if len(cleaned) < 2:
         return None
 
+    # Disambiguate overlapping nameplates before fuzzy scoring.
     if "draconic" in cleaned:
         return BossMatch(2, "draconic", "Draconic Tree Sentinel & Royal Cavalrymen", "Draconic Tree Sentinel", 100.0, raw_text)
     if "fallingstar" in cleaned or "falling star" in cleaned:

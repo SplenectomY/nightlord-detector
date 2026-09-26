@@ -8,10 +8,12 @@ import sys
 import threading
 import time
 import tkinter as tk
+from tkinter import ttk
 
 from .capture import Roi, configure_tesseract, grab_roi, ocr_image
-from .config import OverlayLayout, load_config, save_config
+from .config import AppConfig, OverlayLayout, load_config, save_config
 from .debug_console import DebugConsole
+from .i18n import LOCALES, current_locale, locale_label, set_locale, t
 from .match import match_boss, rank_bosses
 from .overlay import OverlayWindow
 from .predict import format_overlay, predict
@@ -32,18 +34,31 @@ class DetectorApp:
         self.last_match_key: tuple[int, str] | None = None
         self._stop = threading.Event()
         found = configure_tesseract()
+        set_locale(self.cfg.language)
 
         self.root = tk.Tk()
-        self.root.title("nightlord-detector")
-        self.root.geometry("360x120+40+240")
+        self.root.title(t("app.title"))
+        self.root.geometry("420x170+40+240")
         self.root.protocol("WM_DELETE_WINDOW", self.shutdown)
+        self._hotkey_lock = threading.Lock()
+        self._last_hotkey_at = 0.0
 
-        ttk_label = tk.Label(
-            self.root,
-            text="nightlord-detector is running.\nF9 opens the debug console.",
-            justify="left",
+        lang_row = tk.Frame(self.root)
+        lang_row.pack(fill="x", padx=16, pady=(14, 4))
+        self.lbl_language = tk.Label(lang_row, text=t("app.language"))
+        self.lbl_language.pack(side="left")
+        self.language = ttk.Combobox(
+            lang_row,
+            values=[f"{code} — {label}" for code, label in LOCALES],
+            width=28,
+            state="readonly",
         )
-        ttk_label.pack(padx=16, pady=16)
+        self.language.set(f"{current_locale()} — {locale_label(current_locale())}")
+        self.language.pack(side="left", padx=8)
+        self.language.bind("<<ComboboxSelected>>", lambda _e: self.set_language(self.language.get().split(" — ", 1)[0]))
+
+        self.status = tk.Label(self.root, text=t("app.status"), justify="left")
+        self.status.pack(anchor="w", padx=16, pady=(4, 12))
 
         self.overlay = OverlayWindow(self.root, self.cfg.overlay)
         self.debug = DebugConsole(
@@ -65,31 +80,27 @@ class DetectorApp:
         self._bind_hotkeys()
         self._refresh_overlay()
         if found:
-            self.root.after(0, lambda: self._log(f"Tesseract: {found}"))
+            self.root.after(0, lambda: self._log(t("log.tesseract", path=found)))
         else:
-            self.root.after(0, lambda: self._log("Tesseract not bundled; OCR needs a system install or a packaged EXE."))
+            self.root.after(0, lambda: self._log(t("log.no_tesseract")))
 
         self.worker = threading.Thread(target=self._loop, name="ocr-loop", daemon=True)
         self.worker.start()
 
     def _bind_hotkeys(self) -> None:
-        for w in (self.root, self.debug.win, self.overlay.win):
-            w.bind_all("<F6>", lambda _e: self._hotkey_assign(1))
-            w.bind_all("<F7>", lambda _e: self._hotkey_assign(2))
-            w.bind_all("<F8>", lambda _e: self._toggle_overlay())
-            w.bind_all("<F9>", lambda _e: self.debug.toggle())
-            w.bind_all("<F10>", lambda _e: self.reset_run())
-
+        # pynput sees F-keys even when the game is focused. Tk bind_all also
+        # fires when one of our windows is focused, so using both made F9
+        # toggle the debug console open then immediately closed.
         try:
             from pynput import keyboard
 
             def on_press(key: object) -> None:
                 mapping = {
-                    keyboard.Key.f6: lambda: self.root.after(0, lambda: self._hotkey_assign(1)),
-                    keyboard.Key.f7: lambda: self.root.after(0, lambda: self._hotkey_assign(2)),
-                    keyboard.Key.f8: lambda: self.root.after(0, self._toggle_overlay),
-                    keyboard.Key.f9: lambda: self.root.after(0, self.debug.toggle),
-                    keyboard.Key.f10: lambda: self.root.after(0, self.reset_run),
+                    keyboard.Key.f6: lambda: self.root.after(0, lambda: self._guarded_hotkey(lambda: self._hotkey_assign(1))),
+                    keyboard.Key.f7: lambda: self.root.after(0, lambda: self._guarded_hotkey(lambda: self._hotkey_assign(2))),
+                    keyboard.Key.f8: lambda: self.root.after(0, lambda: self._guarded_hotkey(self._toggle_overlay)),
+                    keyboard.Key.f9: lambda: self.root.after(0, lambda: self._guarded_hotkey(self.debug.toggle)),
+                    keyboard.Key.f10: lambda: self.root.after(0, lambda: self._guarded_hotkey(self.reset_run)),
                 }
                 action = mapping.get(key)
                 if action:
@@ -98,10 +109,25 @@ class DetectorApp:
             self._listener = keyboard.Listener(on_press=on_press)
             self._listener.daemon = True
             self._listener.start()
-            self._log("Global hotkeys armed via pynput.")
-        except Exception as exc:
+            self._log(t("log.hotkeys_global"))
+            return
+        except Exception as exc:  # noqa: BLE001
             self._listener = None
-            self._log(f"pynput unavailable ({exc}); F-keys work when a detector window is focused.")
+            self._log(t("log.hotkeys_tk", exc=exc))
+
+        self.root.bind_all("<F6>", lambda _e: self._guarded_hotkey(lambda: self._hotkey_assign(1)))
+        self.root.bind_all("<F7>", lambda _e: self._guarded_hotkey(lambda: self._hotkey_assign(2)))
+        self.root.bind_all("<F8>", lambda _e: self._guarded_hotkey(self._toggle_overlay))
+        self.root.bind_all("<F9>", lambda _e: self._guarded_hotkey(self.debug.toggle))
+        self.root.bind_all("<F10>", lambda _e: self._guarded_hotkey(self.reset_run))
+
+    def _guarded_hotkey(self, action: object) -> None:
+        now = time.monotonic()
+        with self._hotkey_lock:
+            if now - self._last_hotkey_at < 0.28:
+                return
+            self._last_hotkey_at = now
+        action()  # type: ignore[operator]
 
     def _toggle_overlay(self) -> None:
         visible = self.overlay.win.state() != "withdrawn"
@@ -118,42 +144,55 @@ class DetectorApp:
     def persist_config(self) -> None:
         path = save_config(self.cfg)
         snippet = self.overlay.hardcoded_snippet()
-        self._log(f"Saved {path}")
-        self._log(f"Hardcode this default: {snippet}")
+        self._log(t("log.saved", path=path))
+        self._log(t("log.hardcode", snippet=snippet))
+
+    def set_language(self, code: str) -> None:
+        chosen = set_locale(code)
+        self.cfg.language = chosen
+        save_config(self.cfg)
+        self.root.title(t("app.title"))
+        self.lbl_language.configure(text=t("app.language"))
+        self.status.configure(text=t("app.status"))
+        self.language.set(f"{chosen} — {locale_label(chosen)}")
+        self.debug.apply_locale()
+        self._refresh_overlay()
+        self._log(t("log.language", label=locale_label(chosen)))
 
     def set_scanning(self, enabled: bool) -> None:
         self.scanning = enabled
-        self._log(f"Scanning {'on' if enabled else 'off'}.")
+        self._log(t("log.scanning_on") if enabled else t("log.scanning_off"))
 
     def set_depth(self, depth: str) -> None:
         self.depth = depth
-        self._log(f"Depth set to {depth}.")
+        self._log(t("log.depth", depth=depth))
         self._refresh_overlay()
 
     def assign_n1(self, key: str) -> None:
         self.night1 = key
         if self.night2 == key:
             self.night2 = None
-        self._log(f"Night 1 = {key}")
+        self._log(t("log.n1", key=key))
         self._refresh_overlay()
 
     def assign_n2(self, key: str) -> None:
         self.night2 = key
-        self._log(f"Night 2 = {key}")
+        self._log(t("log.n2", key=key))
         self._refresh_overlay()
 
     def reset_run(self) -> None:
         self.night1 = None
         self.night2 = None
         self.last_match_key = None
-        self._log("Run reset.")
+        self._log(t("log.reset"))
         self._refresh_overlay()
 
     def _hotkey_assign(self, night: int) -> None:
+        # Use the latest OCR snapshot stored on the instance.
         raw = getattr(self, "_last_raw", "")
         match = match_boss(raw) if raw else None
         if not match:
-            self._log(f"F{5 + night}: nothing to assign from current OCR.")
+            self._log(t("log.assign_empty", key=5 + night))
             return
         if night == 1:
             self.assign_n1(match.key)
@@ -167,11 +206,11 @@ class DetectorApp:
         self.last_match_key = ident
         if self.night1 is None:
             self.assign_n1(key)
-            self._log(f"Auto Night 1 from healthbar: {label} ({score:.0f})")
+            self._log(t("log.auto_n1", label=label, score=f"{score:.0f}"))
             return
         if self.night2 is None and key != self.night1:
             self.assign_n2(key)
-            self._log(f"Auto Night 2 from healthbar: {label} ({score:.0f})")
+            self._log(t("log.auto_n2", label=label, score=f"{score:.0f}"))
 
     def _refresh_overlay(self) -> None:
         prediction = predict(self.night1, self.night2, self.depth)
@@ -191,25 +230,25 @@ class DetectorApp:
                     image = grab_roi(self.roi, self.monitor)
                     engine, text = ocr_image(image)
                     self._last_raw = text
+                    match = match_boss(text) if text else None
                     ranks = rank_bosses(text) if text else []
                     rank_text = "\n".join(
                         f"{m.score:5.1f}  N{m.night}  {m.key:12}  {m.label}  via '{m.alias}'"
                         for m in ranks
-                    ) or "(no text)"
+                    ) or t("debug.no_text")
 
                     def publish() -> None:
                         self.debug.set_ocr(engine, text)
                         self.debug.set_ranks(rank_text)
 
                     self.root.after(0, publish)
-                    match = match_boss(text) if text else None
                     if match and match.score >= 86:
                         self.root.after(
                             0,
                             lambda m=match: self._maybe_auto_assign(m.night, m.key, m.label, m.score),
                         )
-                except Exception as exc:
-                    self._log(f"Scan error: {exc}")
+                except Exception as exc:  # noqa: BLE001
+                    self._log(t("log.scan_error", exc=exc))
             remaining = interval - (time.time() - started)
             if remaining > 0:
                 self._stop.wait(remaining)
