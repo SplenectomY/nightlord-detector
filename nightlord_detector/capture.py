@@ -83,17 +83,27 @@ def preprocess(image: Image.Image) -> Image.Image:
     return gray.filter(ImageFilter.SHARPEN)
 
 
-def ocr_image(image: Image.Image) -> tuple[str, str]:
+def ocr_image(image: Image.Image, lang: str | None = None) -> tuple[str, str]:
+    from .i18n import tess_lang, uses_latin_ocr
+
     processed = preprocess(image)
     configure_tesseract()
+    tess = lang or tess_lang()
     try:
         import pytesseract
 
-        text = pytesseract.image_to_string(
-            processed,
-            config="--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'&- ",
-        )
-        return "tesseract", " ".join(text.split())
+        last_exc: Exception | None = None
+        for candidate in (tess, "eng"):
+            try:
+                if uses_latin_ocr() and candidate == "eng":
+                    config = "--psm 7 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'&- "
+                else:
+                    config = "--psm 7"
+                text = pytesseract.image_to_string(processed, lang=candidate, config=config)
+                return "tesseract", " ".join(text.split())
+            except Exception as exc:  # noqa: BLE001
+                last_exc = exc
+        log.debug("Tesseract unavailable: %s", last_exc)
     except Exception as exc:  # noqa: BLE001
         log.debug("Tesseract unavailable: %s", exc)
 

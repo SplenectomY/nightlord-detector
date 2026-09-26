@@ -7,6 +7,7 @@ from pathlib import Path
 root = Path.cwd()
 datas = [
     (str(root / "data"), "data"),
+    (str(root / "locales"), "locales"),
 ]
 resources = root / "resources"
 if resources.exists():
@@ -32,7 +33,7 @@ hiddenimports = [
     "pynput.keyboard._win32",
     "pynput.mouse._win32",
     "nightlord_detector",
-    "nightlord_detector.app",
+    "nightlord_detector.i18n",
     "nightlord_detector.capture",
     "nightlord_detector.config",
     "nightlord_detector.debug_console",

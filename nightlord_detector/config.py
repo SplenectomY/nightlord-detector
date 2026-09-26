@@ -30,6 +30,7 @@ class AppConfig:
     roi_width: float = 0.44
     roi_height: float = 0.10
     overlay: OverlayLayout | None = None
+    language: str = "en"
 
     def __post_init__(self) -> None:
         if self.overlay is None:
@@ -53,6 +54,30 @@ def compute_overlay_rect(
     return x, y, width, height
 
 
+def compute_roi_rect(
+    screen_w: int,
+    screen_h: int,
+    left: float,
+    top: float,
+    width: float,
+    height: float,
+    monitor_left: int = 0,
+    monitor_top: int = 0,
+) -> tuple[int, int, int, int]:
+    """Return the capture rectangle in pixels. Matches capture.Roi.to_pixels."""
+    screen_w = max(1, int(screen_w))
+    screen_h = max(1, int(screen_h))
+    x = monitor_left + int(screen_w * float(left))
+    y = monitor_top + int(screen_h * float(top))
+    w = max(32, int(screen_w * float(width)))
+    h = max(16, int(screen_h * float(height)))
+    x = max(monitor_left, min(x, monitor_left + screen_w - 1))
+    y = max(monitor_top, min(y, monitor_top + screen_h - 1))
+    w = max(1, min(w, monitor_left + screen_w - x))
+    h = max(1, min(h, monitor_top + screen_h - y))
+    return x, y, w, h
+
+
 def load_config() -> AppConfig:
     if not CONFIG_PATH.exists():
         return AppConfig()
@@ -74,6 +99,7 @@ def save_config(cfg: AppConfig) -> Path:
         "roi_width": cfg.roi_width,
         "roi_height": cfg.roi_height,
         "overlay": asdict(cfg.overlay or OverlayLayout()),
+        "language": cfg.language,
     }
     CONFIG_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     return CONFIG_PATH

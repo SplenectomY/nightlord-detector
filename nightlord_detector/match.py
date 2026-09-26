@@ -12,11 +12,10 @@ from .predict import load_tables
 
 
 def normalize(text: str) -> str:
-    text = unicodedata.normalize("NFKD", text)
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = unicodedata.normalize("NFKC", text)
     text = text.lower()
     text = text.replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
+    text = re.sub(r"[^\w]+", " ", text, flags=re.UNICODE)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -42,12 +41,28 @@ def _catalog() -> list[tuple[int, str, str, str, str]]:
 
 def match_boss(raw_text: str, min_score: float = 78.0) -> BossMatch | None:
     cleaned = normalize(raw_text)
-    if len(cleaned) < 4:
+    if len(cleaned) < 2:
         return None
 
-    if "draconic" in cleaned:
+    # Disambiguate overlapping nameplates before fuzzy scoring.
+    raw_l = raw_text.lower()
+    draconic_hints = (
+        "draconic",
+        "竜のツリー",
+        "용의 트리",
+        "龙装",
+        "龍裝",
+        "draconique",
+        "drakonische",
+        "dracónica",
+        "draconica",
+        "dracônica",
+        "smoczy strażnik",
+        "драконий страж",
+    )
+    if any(hint in cleaned or hint in raw_l for hint in draconic_hints):
         return BossMatch(2, "draconic", "Draconic Tree Sentinel & Royal Cavalrymen", "Draconic Tree Sentinel", 100.0, raw_text)
-    if "fallingstar" in cleaned or "falling star" in cleaned:
+    if "fallingstar" in cleaned or "falling star" in cleaned or "降る星" in raw_text or "坠星" in raw_text or "墜星" in raw_text or "내리는 별" in raw_text:
         return BossMatch(2, "fallingstar", "Full-Grown Fallingstar Beast", "Fallingstar Beast", 100.0, raw_text)
 
     best: BossMatch | None = None
