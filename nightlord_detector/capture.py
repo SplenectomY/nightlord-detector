@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import mss
-import numpy as np
 from PIL import Image, ImageFilter, ImageOps
 
 from .paths import resource_path
@@ -108,7 +107,3 @@ def ocr_image(image: Image.Image) -> tuple[str, str]:
         log.debug("winocr unavailable: %s", exc)
 
     return "none", ""
-
-
-def crop_preview_array(image: Image.Image) -> np.ndarray:
-    return np.array(image)

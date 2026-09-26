@@ -45,7 +45,7 @@ if ($TessSrc) {
     Write-Warning "Install https://github.com/UB-Mannheim/tesseract/wiki then rerun this script."
 }
 
-python -m pip install -q pyinstaller
+python -m pip install -q -r requirements.txt
 python -m PyInstaller --noconfirm --clean nightlord-detector.spec
 if ($LASTEXITCODE -ne 0) {
     throw "PyInstaller failed with exit $LASTEXITCODE"
