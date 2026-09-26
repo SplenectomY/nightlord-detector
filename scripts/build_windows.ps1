@@ -7,9 +7,11 @@
 #   .\.venv\Scripts\Activate.ps1
 #   pip install -r requirements.txt
 #   winget install UB-Mannheim.TesseractOCR
-#   winget install JRSoftware.InnoSetup   # optional, for the Setup.exe
+#   winget install JRSoftware.InnoSetup
 #   scripts\build_windows.cmd
 #   powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\build_windows.ps1
+#
+# This file is ASCII-only. Windows PowerShell 5.1 misreads UTF-8 dashes as quotes.
 
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
@@ -79,6 +81,6 @@ if ($Iscc) {
         Write-Host "Installer: $Setup"
     }
 } else {
-    Write-Host "Inno Setup not found — skipped NightlordDetectorSetup.exe."
+    Write-Host "Inno Setup not found - skipped NightlordDetectorSetup.exe."
     Write-Host "Install it with: winget install JRSoftware.InnoSetup"
 }
