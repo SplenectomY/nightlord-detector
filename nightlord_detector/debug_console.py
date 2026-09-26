@@ -23,16 +23,18 @@ class DebugConsole:
         on_overlay_layout: Callable[[OverlayLayout], None],
         on_save_config: Callable[[], None],
         on_toggle_scan: Callable[[bool], None],
+        on_visibility: Callable[[bool], None],
         initial_roi: tuple[float, float, float, float],
         initial_overlay: OverlayLayout,
     ):
         self.win = tk.Toplevel(root)
         self.win.geometry("760x820+580+40")
         self.win.configure(bg="#111111")
-        self.win.protocol("WM_DELETE_WINDOW", self.win.withdraw)
+        self.win.protocol("WM_DELETE_WINDOW", self.hide)
         self._on_overlay_layout = on_overlay_layout
         self._on_assign_n1 = on_assign_n1
         self._on_assign_n2 = on_assign_n2
+        self._on_visibility = on_visibility
 
         pad = {"padx": 8, "pady": 4}
 
@@ -119,6 +121,8 @@ class DebugConsole:
 
         self.lbl_roi = ttk.Label(self.win)
         self.lbl_roi.pack(anchor="w", **pad)
+        self.lbl_roi_help = ttk.Label(self.win, wraplength=720)
+        self.lbl_roi_help.pack(anchor="w", padx=8)
         self.sliders: dict[str, tk.Scale] = {}
         names = ("left", "top", "width", "height")
         for name, value in zip(names, initial_roi):
@@ -166,6 +170,7 @@ class DebugConsole:
         self.lbl_overlay.configure(text=t("debug.overlay_pos"))
         self.lbl_overlay_help.configure(text=t("debug.overlay_help"))
         self.lbl_roi.configure(text=t("debug.roi"))
+        self.lbl_roi_help.configure(text=t("debug.roi_help"))
         self.lbl_log.configure(text=t("debug.log"))
         self.lbl_hotkeys.configure(text=t("debug.hotkeys"))
 
@@ -233,12 +238,22 @@ class DebugConsole:
     def show(self) -> None:
         self.win.deiconify()
         self.win.lift()
+        if self._on_visibility:
+            self._on_visibility(True)
 
     def hide(self) -> None:
         self.win.withdraw()
+        if self._on_visibility:
+            self._on_visibility(False)
 
     def toggle(self) -> None:
         if self.win.state() == "withdrawn":
             self.show()
         else:
             self.hide()
+
+    def is_visible(self) -> bool:
+        try:
+            return self.win.state() != "withdrawn"
+        except Exception:
+            return False

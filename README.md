@@ -60,7 +60,9 @@ pip install -r requirements.txt
 python -m nightlord_detector
 ```
 
-The debug console opens by default. Pick the UI language on the small controller window; it is saved to `%LOCALAPPDATA%\nightlord-detector\config.json` and also selects the Tesseract language pack when that traineddata is bundled.
+The debug console opens by default. While it is open a red rectangle marks the nameplate crop the OCR actually reads. Hide the debug window (or press F9) and the box goes away so it does not sit on the healthbar during a real run.
+
+Pick the UI language on the small controller window; it is saved to `%LOCALAPPDATA%\nightlord-detector\config.json` and also selects the Tesseract language pack when that traineddata is bundled.
 
 ```powershell
 python -m nightlord_detector --no-debug

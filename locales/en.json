@@ -28,6 +28,7 @@
   "debug.overlay_pos": "Overlay position (bottom-center, under the boss HP bar)",
   "debug.overlay_help": "Drag sliders to move the live overlay. Save layout, then paste the printed OverlayLayout(...) into config.py to hardcode it.",
   "debug.roi": "Nameplate ROI (fractions of the monitor)",
+  "debug.roi_help": "A red box on the desktop marks the capture area while this window is open. Drag the sliders until it sits on the Night 1 / Night 2 healthbar title.",
   "debug.log": "Log",
   "debug.hotkeys": "F6 Night 1   F7 Night 2   F8 overlay   F9 debug   F10 reset",
   "debug.no_text": "(no text)",

@@ -15,7 +15,7 @@ from .config import AppConfig, OverlayLayout, load_config, save_config
 from .debug_console import DebugConsole
 from .i18n import LOCALES, current_locale, locale_label, set_locale, t
 from .match import match_boss, rank_bosses
-from .overlay import OverlayWindow
+from .overlay import OverlayWindow, RoiGuideWindow
 from .predict import format_overlay, predict
 
 log = logging.getLogger("nightlord-detector")
@@ -61,6 +61,7 @@ class DetectorApp:
         self.status.pack(anchor="w", padx=16, pady=(4, 12))
 
         self.overlay = OverlayWindow(self.root, self.cfg.overlay)
+        self.roi_guide = RoiGuideWindow(self.root)
         self.debug = DebugConsole(
             self.root,
             on_assign_n1=self.assign_n1,
@@ -71,10 +72,13 @@ class DetectorApp:
             on_overlay_layout=self.set_overlay_layout,
             on_save_config=self.persist_config,
             on_toggle_scan=self.set_scanning,
+            on_visibility=self.set_debug_visible,
             initial_roi=(self.roi.left, self.roi.top, self.roi.width, self.roi.height),
             initial_overlay=self.cfg.overlay or OverlayLayout(),
         )
-        if not debug:
+        if debug:
+            self.set_debug_visible(True)
+        else:
             self.debug.hide()
 
         self._bind_hotkeys()
@@ -136,6 +140,11 @@ class DetectorApp:
     def set_roi(self, left: float, top: float, width: float, height: float) -> None:
         self.roi = Roi(left, top, width, height)
         self.cfg.roi_left, self.cfg.roi_top, self.cfg.roi_width, self.cfg.roi_height = left, top, width, height
+        self.roi_guide.set_fractions(left, top, width, height)
+
+    def set_debug_visible(self, visible: bool) -> None:
+        self.roi_guide.set_fractions(self.roi.left, self.roi.top, self.roi.width, self.roi.height)
+        self.roi_guide.set_visible(visible)
 
     def set_overlay_layout(self, layout: OverlayLayout) -> None:
         self.cfg.overlay = layout
@@ -264,6 +273,10 @@ class DetectorApp:
                 listener.stop()
             except Exception:
                 pass
+        try:
+            self.roi_guide.set_visible(False)
+        except Exception:
+            pass
         self.root.destroy()
 
 
