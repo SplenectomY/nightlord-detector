@@ -1,1 +1,1074 @@
-{"source":"https://nightlord.app/ (Nightreign Boss Chart, scraped 2026-09-25)","notes":["Only Night 1 / Night 2 bosses that nightlord.app uses for Deep of Night prediction are included.","Field bosses and other healthbar titles are ignored by design.","Heolstor can draw from any listed pool and remains a wildcard whenever those pools allow him.","Everdark Sovereigns are scored separately then grouped with the regular Nightlord.","DLC bosses (Dreglord / Balancers pools) require The Forsaken Hollows."],"expeditions":{"gladius":{"name":"Gladius, Beast of Night","expedition":"Tricephalos","weakness":"Holy"},"adel":{"name":"Adel, Baron of Night","expedition":"Gaping Jaw","weakness":"Poison"},"gnoster":{"name":"Gnoster, Wisdom of Night","expedition":"Sentient Pest","weakness":"Fire"},"maris":{"name":"Maris, Fathom of Night","expedition":"Augur","weakness":"Lightning"},"libra":{"name":"Libra, Creature of Night","expedition":"Equilibrious Beast","weakness":"Madness"},"fulghor":{"name":"Fulghor, Champion of Nightglow","expedition":"Darkdrift Knight","weakness":"Lightning"},"caligo":{"name":"Caligo, Miasma of Night","expedition":"Fissure in the Fog","weakness":"Fire"},"heolstor":{"name":"Heolstor, the Nightlord","expedition":"Night Aspect","weakness":"Holy"},"dreglord":{"name":"Traitorous Straghess","expedition":"Dreglord","weakness":""},"balancers":{"name":"Weapon-Bequeathed Harmonia","expedition":"Balancers","weakness":"Sleep"}},"score_keys":["gladius","adel","gnoster","maris","libra","fulghor","caligo","heolstor","dreglord","balancers","es_gladius","es_adel","es_gnoster","es_maris","es_libra","es_fulghor","es_caligo","es_balancers"],"priors":{"any":{"gladius":1,"adel":1,"gnoster":1,"maris":1,"libra":1,"fulghor":1,"caligo":1,"heolstor":1,"dreglord":1,"balancers":1,"es_gladius":1,"es_adel":1,"es_gnoster":1,"es_maris":1,"es_libra":1,"es_fulghor":1,"es_caligo":1,"es_balancers":1},"d1":{"gladius":10.08,"adel":10.08,"gnoster":10.08,"maris":5.04,"libra":10.08,"fulghor":10.08,"caligo":10.08,"heolstor":7.06,"dreglord":11.29,"balancers":16.13,"es_gladius":0,"es_adel":0,"es_gnoster":0,"es_maris":0,"es_libra":0,"es_fulghor":0,"es_caligo":0,"es_balancers":0},"d2":{"gladius":8.06,"adel":8.06,"gnoster":8.06,"maris":4.03,"libra":8.06,"fulghor":8.06,"caligo":8.06,"heolstor":7.06,"dreglord":11.29,"balancers":12.9,"es_gladius":2.02,"es_adel":2.02,"es_gnoster":2.02,"es_maris":1.01,"es_libra":2.02,"es_fulghor":2.02,"es_caligo":2.02,"es_balancers":3.23},"d3":{"gladius":6.55,"adel":6.55,"gnoster":6.55,"maris":3.28,"libra":6.55,"fulghor":6.55,"caligo":6.55,"heolstor":7.06,"dreglord":11.29,"balancers":10.48,"es_gladius":3.53,"es_adel":3.53,"es_gnoster":3.53,"es_maris":1.76,"es_libra":3.53,"es_fulghor":3.53,"es_caligo":3.53,"es_balancers":5.65},"d4":{"gladius":5.04,"adel":5.04,"gnoster":5.04,"maris":2.52,"libra":5.04,"fulghor":5.04,"caligo":5.04,"heolstor":7.06,"dreglord":11.29,"balancers":8.06,"es_gladius":5.04,"es_adel":5.04,"es_gnoster":5.04,"es_maris":2.52,"es_libra":5.04,"es_fulghor":5.04,"es_caligo":5.04,"es_balancers":8.06},"d5":{"gladius":5.04,"adel":5.04,"gnoster":5.04,"maris":2.52,"libra":5.04,"fulghor":5.04,"caligo":5.04,"heolstor":7.06,"dreglord":11.29,"balancers":8.06,"es_gladius":5.04,"es_adel":5.04,"es_gnoster":5.04,"es_maris":2.52,"es_libra":5.04,"es_fulghor":5.04,"es_caligo":5.04,"es_balancers":8.06}},"night1":{"battlefield":{"label":"Battlefield Commander","lords":["gnoster","libra","heolstor"],"aliases":["Battlefield Commander"]},"bbh":{"label":"Bell Bearing Hunter","lords":["gladius","caligo","heolstor"],"aliases":["Bell Bearing Hunter"]},"centipede":{"label":"Centipede Demon","lords":["gnoster","libra","fulghor","heolstor"],"aliases":["Centipede Demon"]},"demi":{"label":"Demi-Human Queen & Swordmaster","lords":["gladius","heolstor"],"aliases":["Demi-Human Queen","Demi-Human Swordmaster","Demi-Human Queen & Swordmaster","Demi-Human Queen and Demi-Human Swordmaster"]},"gaping":{"label":"Gaping Dragon","lords":["adel","maris","fulghor","heolstor"],"aliases":["Gaping Dragon"]},"grafted":{"label":"Grafted Monarch","lords":["maris","caligo","heolstor"],"aliases":["Grafted Monarch"]},"cavalry":{"label":"Night's Cavalry Duo","lords":["adel","fulghor","heolstor"],"aliases":["Night's Cavalry","Nights Cavalry","Night Cavalry","Night's Cavalry Duo","Night's Cavalry (Glaive)","Night's Cavalry (Flail)"]},"revenant":{"label":"Royal Revenant","lords":["libra","fulghor","heolstor"],"aliases":["Royal Revenant"]},"smelter":{"label":"Smelter Demon","lords":["gnoster","maris","caligo","heolstor"],"aliases":["Smelter Demon"]},"freja":{"label":"The Duke's Dear Freja","lords":["adel","libra","caligo","heolstor"],"aliases":["The Duke's Dear Freja","Duke's Dear Freja","Duke's Dear Freya","The Duke's Dear Freya"]},"tibia":{"label":"Tibia Mariner","lords":["gnoster","libra","caligo","heolstor"],"aliases":["Tibia Mariner","Those Who Live in Death"]},"tree":{"label":"Ulcerated Tree Spirit","lords":["gnoster","caligo","heolstor"],"aliases":["Ulcerated Tree Spirit"]},"gargoyle":{"label":"Valiant Gargoyle","lords":["adel","maris","fulghor","heolstor"],"aliases":["Valiant Gargoyle"]},"wormface":{"label":"Wormface","lords":["adel","maris","fulghor","heolstor"],"aliases":["Wormface"]},"deathknight":{"label":"Death Knight","lords":["dreglord"],"aliases":["Death Knight","Death Knights","Death Knight Trio"]},"demons":{"label":"Demon in Pain & Demon from Below","lords":["balancers"],"aliases":["Demon in Pain","Demon from Below","Demon in Pain & Demon from Below"]},"warrior":{"label":"Divine Beast Warrior & Curseblade","lords":["balancers"],"aliases":["Divine Beast Warrior","Curseblade","Divine Beast Warrior & Curseblade"]},"bear":{"label":"Great Red Bear","lords":["dreglord"],"aliases":["Great Red Bear","Giant Red Bear"]}},"night2":{"ancient":{"label":"Ancient Dragon","lords":["adel","heolstor"],"aliases":["Ancient Dragon"]},"crucible":{"label":"Crucible Knight & Golden Hippopotamus","lords":["adel","libra","heolstor"],"aliases":["Crucible Knight","Golden Hippopotamus","Crucible Knight & Golden Hippopotamus"]},"dancer":{"label":"Dancer of the Boreal Valley","lords":["caligo","heolstor"],"aliases":["Dancer of the Boreal Valley"]},"deathrite":{"label":"Death Rite Bird","lords":["libra","heolstor"],"aliases":["Death Rite Bird"]},"draconic":{"label":"Draconic Tree Sentinel & Royal Cavalrymen","lords":["gnoster","caligo","heolstor"],"aliases":["Draconic Tree Sentinel","Draconic Tree Sentinel & Royal Cavalrymen","Draconic Tree Sentinel and two Royal Cavalryman"]},"fallingstar":{"label":"Full-Grown Fallingstar Beast","lords":["maris","heolstor"],"aliases":["Full-Grown Fallingstar Beast","Fallingstar Beast"]},"fell":{"label":"Fell Omen","lords":["gladius","fulghor","heolstor"],"aliases":["Fell Omen","Margit","Margit the Fell Omen"]},"godskin":{"label":"Godskin Duo","lords":["maris","libra","caligo","heolstor"],"aliases":["Godskin Duo","Godskin Apostle","Godskin Noble","Godskin Apostle and Godskin Noble"]},"wyrm":{"label":"Great Wyrm","lords":["gnoster","heolstor"],"aliases":["Great Wyrm"]},"nameless":{"label":"Nameless King","lords":["fulghor","heolstor"],"aliases":["Nameless King"]},"nox":{"label":"Nox Dragonkin Soldier","lords":["gnoster","fulghor","heolstor"],"aliases":["Nox Dragonkin Soldier","Dragonkin Soldier"]},"outland":{"label":"Outland Commander","lords":["adel","fulghor","heolstor"],"aliases":["Outland Commander"]},"treesent":{"label":"Tree Sentinel & Royal Cavalrymen","lords":["gladius","gnoster","maris","heolstor"],"aliases":["Tree Sentinel","Tree Sentinel & Royal Cavalrymen","Tree Sentinel and Royal Cavalrymen"]},"artorias":{"label":"Knight Artorias","lords":["dreglord"],"aliases":["Knight Artorias","Artorias"]},"lion":{"label":"Divine Beast Dancing Lion","lords":["dreglord"],"aliases":["Divine Beast Dancing Lion","Dancing Lion"]},"mohg":{"label":"Lord of Blood","lords":["balancers"],"aliases":["Lord of Blood","Mohg","Mohg, Lord of Blood","Mohg Lord of Blood"]},"demonprince":{"label":"Demon Prince","lords":["balancers"],"aliases":["Demon Prince"]}}}
+{
+  "source": "https://nightlord.app/ (Nightreign Boss Chart, scraped 2026-09-25)",
+  "notes": [
+    "Only Night 1 / Night 2 bosses that nightlord.app uses for Deep of Night prediction are included.",
+    "Field bosses and other healthbar titles are ignored by design.",
+    "Heolstor can draw from any listed pool and remains a wildcard whenever those pools allow him.",
+    "Everdark Sovereigns are scored separately then grouped with the regular Nightlord.",
+    "DLC bosses (Dreglord / Balancers pools) require The Forsaken Hollows."
+  ],
+  "expeditions": {
+    "gladius": {
+      "name": "Gladius, Beast of Night",
+      "expedition": "Tricephalos",
+      "weakness": "Holy"
+    },
+    "adel": {
+      "name": "Adel, Baron of Night",
+      "expedition": "Gaping Jaw",
+      "weakness": "Poison"
+    },
+    "gnoster": {
+      "name": "Gnoster, Wisdom of Night",
+      "expedition": "Sentient Pest",
+      "weakness": "Fire"
+    },
+    "maris": {
+      "name": "Maris, Fathom of Night",
+      "expedition": "Augur",
+      "weakness": "Lightning"
+    },
+    "libra": {
+      "name": "Libra, Creature of Night",
+      "expedition": "Equilibrious Beast",
+      "weakness": "Madness"
+    },
+    "fulghor": {
+      "name": "Fulghor, Champion of Nightglow",
+      "expedition": "Darkdrift Knight",
+      "weakness": "Lightning"
+    },
+    "caligo": {
+      "name": "Caligo, Miasma of Night",
+      "expedition": "Fissure in the Fog",
+      "weakness": "Fire"
+    },
+    "heolstor": {
+      "name": "Heolstor, the Nightlord",
+      "expedition": "Night Aspect",
+      "weakness": "Holy"
+    },
+    "dreglord": {
+      "name": "Traitorous Straghess",
+      "expedition": "Dreglord",
+      "weakness": ""
+    },
+    "balancers": {
+      "name": "Weapon-Bequeathed Harmonia",
+      "expedition": "Balancers",
+      "weakness": "Sleep"
+    }
+  },
+  "score_keys": [
+    "gladius",
+    "adel",
+    "gnoster",
+    "maris",
+    "libra",
+    "fulghor",
+    "caligo",
+    "heolstor",
+    "dreglord",
+    "balancers",
+    "es_gladius",
+    "es_adel",
+    "es_gnoster",
+    "es_maris",
+    "es_libra",
+    "es_fulghor",
+    "es_caligo",
+    "es_balancers"
+  ],
+  "priors": {
+    "any": {
+      "gladius": 1,
+      "adel": 1,
+      "gnoster": 1,
+      "maris": 1,
+      "libra": 1,
+      "fulghor": 1,
+      "caligo": 1,
+      "heolstor": 1,
+      "dreglord": 1,
+      "balancers": 1,
+      "es_gladius": 1,
+      "es_adel": 1,
+      "es_gnoster": 1,
+      "es_maris": 1,
+      "es_libra": 1,
+      "es_fulghor": 1,
+      "es_caligo": 1,
+      "es_balancers": 1
+    },
+    "d1": {
+      "gladius": 10.08,
+      "adel": 10.08,
+      "gnoster": 10.08,
+      "maris": 5.04,
+      "libra": 10.08,
+      "fulghor": 10.08,
+      "caligo": 10.08,
+      "heolstor": 7.06,
+      "dreglord": 11.29,
+      "balancers": 16.13,
+      "es_gladius": 0,
+      "es_adel": 0,
+      "es_gnoster": 0,
+      "es_maris": 0,
+      "es_libra": 0,
+      "es_fulghor": 0,
+      "es_caligo": 0,
+      "es_balancers": 0
+    },
+    "d2": {
+      "gladius": 8.06,
+      "adel": 8.06,
+      "gnoster": 8.06,
+      "maris": 4.03,
+      "libra": 8.06,
+      "fulghor": 8.06,
+      "caligo": 8.06,
+      "heolstor": 7.06,
+      "dreglord": 11.29,
+      "balancers": 12.9,
+      "es_gladius": 2.02,
+      "es_adel": 2.02,
+      "es_gnoster": 2.02,
+      "es_maris": 1.01,
+      "es_libra": 2.02,
+      "es_fulghor": 2.02,
+      "es_caligo": 2.02,
+      "es_balancers": 3.23
+    },
+    "d3": {
+      "gladius": 6.55,
+      "adel": 6.55,
+      "gnoster": 6.55,
+      "maris": 3.28,
+      "libra": 6.55,
+      "fulghor": 6.55,
+      "caligo": 6.55,
+      "heolstor": 7.06,
+      "dreglord": 11.29,
+      "balancers": 10.48,
+      "es_gladius": 3.53,
+      "es_adel": 3.53,
+      "es_gnoster": 3.53,
+      "es_maris": 1.76,
+      "es_libra": 3.53,
+      "es_fulghor": 3.53,
+      "es_caligo": 3.53,
+      "es_balancers": 5.65
+    },
+    "d4": {
+      "gladius": 5.04,
+      "adel": 5.04,
+      "gnoster": 5.04,
+      "maris": 2.52,
+      "libra": 5.04,
+      "fulghor": 5.04,
+      "caligo": 5.04,
+      "heolstor": 7.06,
+      "dreglord": 11.29,
+      "balancers": 8.06,
+      "es_gladius": 5.04,
+      "es_adel": 5.04,
+      "es_gnoster": 5.04,
+      "es_maris": 2.52,
+      "es_libra": 5.04,
+      "es_fulghor": 5.04,
+      "es_caligo": 5.04,
+      "es_balancers": 8.06
+    },
+    "d5": {
+      "gladius": 5.04,
+      "adel": 5.04,
+      "gnoster": 5.04,
+      "maris": 2.52,
+      "libra": 5.04,
+      "fulghor": 5.04,
+      "caligo": 5.04,
+      "heolstor": 7.06,
+      "dreglord": 11.29,
+      "balancers": 8.06,
+      "es_gladius": 5.04,
+      "es_adel": 5.04,
+      "es_gnoster": 5.04,
+      "es_maris": 2.52,
+      "es_libra": 5.04,
+      "es_fulghor": 5.04,
+      "es_caligo": 5.04,
+      "es_balancers": 8.06
+    }
+  },
+  "night1": {
+    "battlefield": {
+      "label": "Battlefield Commander",
+      "lords": [
+        "gnoster",
+        "libra",
+        "heolstor"
+      ],
+      "aliases": [
+        "Battlefield Commander",
+        "戦場の宿将",
+        "전장의 노장",
+        "战场老将",
+        "戰場老將",
+        "Commandant de champ de bataille",
+        "Schlachtfeldkommandant",
+        "Comandante del campo de batalla",
+        "Comandante del campo di battaglia",
+        "Comandante do campo de batalha",
+        "Dowódca pola bitwy",
+        "Командир поля боя"
+      ]
+    },
+    "bbh": {
+      "label": "Bell Bearing Hunter",
+      "lords": [
+        "gladius",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Bell Bearing Hunter",
+        "鈴玉狩り",
+        "鈴玉の狩人",
+        "방울 사냥꾼",
+        "방울구슬 사냥꾼",
+        "铃珠猎人",
+        "鈴珠獵人",
+        "Chasseur de pommeaux",
+        "Glockenkugeljäger",
+        "Cazador de sonajas",
+        "Cacciatore di batacchi",
+        "Caçador de guizos",
+        "Łowca kul dzwonkowych",
+        "Охотник за колокольными сферами"
+      ]
+    },
+    "centipede": {
+      "label": "Centipede Demon",
+      "lords": [
+        "gnoster",
+        "libra",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Centipede Demon",
+        "百足のデーモン",
+        "ムカデのデーモン",
+        "지네 데몬",
+        "百足恶魔",
+        "百足惡魔",
+        "Démon Mille-pattes",
+        "Tausendfüßler-Dämon",
+        "Demonio ciempiés",
+        "Demone centipede",
+        "Demônio centopeia",
+        "Demon stonoga",
+        "Демон-сороконожка"
+      ]
+    },
+    "demi": {
+      "label": "Demi-Human Queen & Swordmaster",
+      "lords": [
+        "gladius",
+        "heolstor"
+      ],
+      "aliases": [
+        "Demi-Human Queen",
+        "Demi-Human Swordmaster",
+        "Demi-Human Queen & Swordmaster",
+        "Demi-Human Queen and Demi-Human Swordmaster",
+        "亜人の女王",
+        "亜人の剣聖",
+        "亜人の女王＆亜人の剣聖",
+        "아인 여왕",
+        "아인 검성",
+        "아인 여왕 & 아인 검성",
+        "亚人女王",
+        "亚人剑圣",
+        "亞人女王",
+        "亞人劍聖",
+        "Reine demi-humaine",
+        "Maître d'épée demi-humain",
+        "Halb mensliche Königin",
+        "Reina semihumana",
+        "Regina semiumana",
+        "Rainha semi-humana",
+        "Królowa półludzi",
+        "Королева полулюдей"
+      ]
+    },
+    "gaping": {
+      "label": "Gaping Dragon",
+      "lords": [
+        "adel",
+        "maris",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Gaping Dragon",
+        "貪食ドラゴン",
+        "탐식의 드래곤",
+        "贪食魔龙",
+        "貪食魔龍",
+        "Dragon Béant",
+        "Gähnender Drache",
+        "Dragón Glotón",
+        "Drago Famelico",
+        "Dragão Boquiaberto",
+        "Ziejący Smok",
+        "Разверстый дракон"
+      ]
+    },
+    "grafted": {
+      "label": "Grafted Monarch",
+      "lords": [
+        "maris",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Grafted Monarch",
+        "接ぎ木の君主",
+        "접목의 군주",
+        "接肢君王",
+        "\"接肢\"君王",
+        "接肢君主",
+        "Monarque greffé",
+        "Gepfropfter Monarch",
+        "Monarca injertado",
+        "Monarca innestato",
+        "Monarca enxertado",
+        "Szczepiony monarcha",
+        "Привитый монарх"
+      ]
+    },
+    "cavalry": {
+      "label": "Night's Cavalry Duo",
+      "lords": [
+        "adel",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Night's Cavalry",
+        "Nights Cavalry",
+        "Night Cavalry",
+        "Night's Cavalry Duo",
+        "Night's Cavalry (Glaive)",
+        "Night's Cavalry (Flail)",
+        "夜の騎兵",
+        "밤의 기병",
+        "黑夜骑兵",
+        "黑夜騎兵",
+        "Cavalerie nocturne",
+        "Nachtreiter",
+        "Caballería nocturna",
+        "Cavalleria notturna",
+        "Cavalaria noturna",
+        "Nocna kawaleria",
+        "Ночная кавалерия"
+      ]
+    },
+    "revenant": {
+      "label": "Royal Revenant",
+      "lords": [
+        "libra",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Royal Revenant",
+        "王族の幽鬼",
+        "왕족의 망령",
+        "王室幽魂",
+        "Revenant royal",
+        "Königlicher Wiedergänger",
+        "Aparecido real",
+        "Redivivo reale",
+        "Revenante real",
+        "Królewski zjawa",
+        "Королевский мертвец"
+      ]
+    },
+    "smelter": {
+      "label": "Smelter Demon",
+      "lords": [
+        "gnoster",
+        "maris",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Smelter Demon",
+        "溶鉄デーモン",
+        "溶鉄のデーモン",
+        "용철 데몬",
+        "熔铁恶魔",
+        "熔鐵惡魔",
+        "Démon de la Fournaise",
+        "Schmelz-Dämon",
+        "Demonio de la fundición",
+        "Demone della Fornace",
+        "Demônio da fundição",
+        "Demon Piecowy",
+        "Демон Плавильни"
+      ]
+    },
+    "freja": {
+      "label": "The Duke's Dear Freja",
+      "lords": [
+        "adel",
+        "libra",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "The Duke's Dear Freja",
+        "Duke's Dear Freja",
+        "Duke's Dear Freya",
+        "The Duke's Dear Freya",
+        "公のフレイディア",
+        "公爵の愛馬フレイヤ",
+        "공작의 프레이자",
+        "公爵的弗雷迪亚",
+        "公爵的夫雷迪亚",
+        "公爵的弗雷迪亞",
+        "Freja, chère au duc",
+        "Des Herzogs liebe Freja",
+        "La querida Freja del duque",
+        "La cara Freja del duca",
+        "A querida Freja do duque",
+        "Ukochana Freja księcia",
+        "Любимица герцога Фрейя"
+      ]
+    },
+    "tibia": {
+      "label": "Tibia Mariner",
+      "lords": [
+        "gnoster",
+        "libra",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Tibia Mariner",
+        "Those Who Live in Death",
+        "ティビアの呼び舟",
+        "死に生きる者たち",
+        "티비아의 배",
+        "죽음에 사는 자들",
+        "提比亚的唤声船",
+        "提比亞的喚聲船",
+        "Marin tibia",
+        "Ceux qui vivent dans la Mort",
+        "Tibia-Schiffer",
+        "Marinero tibia",
+        "Nocchiero tibia",
+        "Marinheiro tibia",
+        "Żeglarz Tibii",
+        "Мореход Тибии",
+        "Живущие в смерти"
+      ]
+    },
+    "tree": {
+      "label": "Ulcerated Tree Spirit",
+      "lords": [
+        "gnoster",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Ulcerated Tree Spirit",
+        "爛れた樹霊",
+        "문드러진 나무령",
+        "腐烂树灵",
+        "腐爛樹靈",
+        "Esprit d'arbre ulcéré",
+        "Vereitertes Baumwesen",
+        "Espíritu de árbol ulcerado",
+        "Spirito d'albero ulcerato",
+        "Espírito de árvore ulcerado",
+        "Owrzodzony duch drzewa",
+        "Изъязвленный древесный дух"
+      ]
+    },
+    "gargoyle": {
+      "label": "Valiant Gargoyle",
+      "lords": [
+        "adel",
+        "maris",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Valiant Gargoyle",
+        "英雄のガーゴイル",
+        "영웅의 가고일",
+        "英雄石像鬼",
+        "Gargouille vaillante",
+        "Tapfere Gargoyle",
+        "Gárgola valerosa",
+        "Gargoyle valoroso",
+        "Gárgula valorosa",
+        "Dzielna gargulec",
+        "Доблестный горгулья"
+      ]
+    },
+    "wormface": {
+      "label": "Wormface",
+      "lords": [
+        "adel",
+        "maris",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Wormface",
+        "ミミズ顔",
+        "지렁이 얼굴",
+        "蚯蚓脸",
+        "蚯蚓臉",
+        "Visage-ver",
+        "Wurmgesicht",
+        "Caragusano",
+        "Volto verminoso",
+        "Cara-de-minhoca",
+        "Twarz robaka",
+        "Червемордый"
+      ]
+    },
+    "deathknight": {
+      "label": "Death Knight",
+      "lords": [
+        "dreglord"
+      ],
+      "aliases": [
+        "Death Knight",
+        "Death Knights",
+        "Death Knight Trio",
+        "死の騎士",
+        "죽음의 기사",
+        "死骑士",
+        "死騎士",
+        "死骑士们",
+        "Chevalier de la Mort",
+        "Todesritter",
+        "Caballero de la Muerte",
+        "Cavaliere della Morte",
+        "Cavaleiro da Morte",
+        "Rycerz Śmierci",
+        "Рыцарь Смерти"
+      ]
+    },
+    "demons": {
+      "label": "Demon in Pain & Demon from Below",
+      "lords": [
+        "balancers"
+      ],
+      "aliases": [
+        "Demon in Pain",
+        "Demon from Below",
+        "Demon in Pain & Demon from Below",
+        "苦悶のデーモン",
+        "下界のデーモン",
+        "고통의 데몬",
+        "하계의 데몬",
+        "负伤恶魔",
+        "洞底恶魔",
+        "負傷惡魔",
+        "洞底惡魔",
+        "Démon en souffrance",
+        "Démon d'en bas",
+        "Dämon der Qual",
+        "Dämon aus der Tiefe",
+        "Demonio atribulado",
+        "Demonio de las profundidades",
+        "Demone sofferente",
+        "Demone dal sottosuolo",
+        "Demônio sofrido",
+        "Demônio das profundezas",
+        "Demon Cierpienia",
+        "Demon z Otchłani",
+        "Демон страдания",
+        "Демон из глубин"
+      ]
+    },
+    "warrior": {
+      "label": "Divine Beast Warrior & Curseblade",
+      "lords": [
+        "balancers"
+      ],
+      "aliases": [
+        "Divine Beast Warrior",
+        "Curseblade",
+        "Divine Beast Warrior & Curseblade",
+        "神獣戦士",
+        "呪剣士",
+        "신수 전사",
+        "저주검객",
+        "神兽战士",
+        "咒剑士",
+        "神獸戰士",
+        "呪劍士",
+        "Guerrier de la bête divine",
+        "Lame maudite",
+        "Krieger der göttlichen Bestie",
+        "Fluchklinge",
+        "Guerrero de la bestia divina",
+        "Hoja maldita",
+        "Guerriero della belva divina",
+        "Lama maledetta",
+        "Guerreiro da fera divina",
+        "Lâmina amaldiçoada",
+        "Wojownik boskiej bestii",
+        "Przeklęta klinga",
+        "Воин божественного зверя",
+        "Проклятый клинок"
+      ]
+    },
+    "bear": {
+      "label": "Great Red Bear",
+      "lords": [
+        "dreglord"
+      ],
+      "aliases": [
+        "Great Red Bear",
+        "Giant Red Bear",
+        "大赤熊",
+        "대적웅",
+        "大紅熊",
+        "大红熊",
+        "Grand ours rouge",
+        "Großer Roter Bär",
+        "Gran oso rojo",
+        "Grande orso rosso",
+        "Grande urso vermelho",
+        "Wielki czerwony niedźwiedź",
+        "Большой красный медведь"
+      ]
+    }
+  },
+  "night2": {
+    "ancient": {
+      "label": "Ancient Dragon",
+      "lords": [
+        "adel",
+        "heolstor"
+      ],
+      "aliases": [
+        "Ancient Dragon",
+        "古竜",
+        "고룡",
+        "古龙",
+        "古龍",
+        "Dragon ancien",
+        "Uralter Drache",
+        "Dragón ancestral",
+        "Drago antico",
+        "Dragão ancestral",
+        "Starożytny smok",
+        "Древний дракон"
+      ]
+    },
+    "crucible": {
+      "label": "Crucible Knight & Golden Hippopotamus",
+      "lords": [
+        "adel",
+        "libra",
+        "heolstor"
+      ],
+      "aliases": [
+        "Crucible Knight",
+        "Golden Hippopotamus",
+        "Crucible Knight & Golden Hippopotamus",
+        "坩堝の騎士",
+        "黄金のカバ",
+        "도가니의 기사",
+        "황금 하마",
+        "熔炉骑士",
+        "黄金河马",
+        "熔爐騎士",
+        "黃金河馬",
+        "Chevalier du Creuset",
+        "Hippopotame doré",
+        "Ritter des Tiegels",
+        "Goldenes Flusspferd",
+        "Caballero del Crisol",
+        "Hipopótamo dorado",
+        "Cavaliere del Crogiolo",
+        "Ippopotamo dorato",
+        "Cavaleiro do Crisol",
+        "Hipopótamo dourado",
+        "Rycerz Tygla",
+        "Złoty hipopotam",
+        "Рыцарь Горнила",
+        "Золотой гиппопотам"
+      ]
+    },
+    "dancer": {
+      "label": "Dancer of the Boreal Valley",
+      "lords": [
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Dancer of the Boreal Valley",
+        "冷たい谷の踊り子",
+        "踊り子",
+        "차가운 골짜기의 무희",
+        "冷冽谷的舞娘",
+        "Danseuse de la Vallée boréale",
+        "Tänzerin des borealen Tals",
+        "Bailarina del Valle Boreal",
+        "Danzatrice della Valle Boreale",
+        "Dançarina do Vale Boreal",
+        "Tancerka Borealnej Doliny",
+        "Танцовщица Холодной долины"
+      ]
+    },
+    "deathrite": {
+      "label": "Death Rite Bird",
+      "lords": [
+        "libra",
+        "heolstor"
+      ],
+      "aliases": [
+        "Death Rite Bird",
+        "死儀礼の鳥",
+        "죽음 의례의 새",
+        "死亡仪式鸟",
+        "死亡儀式鳥",
+        "Oiseau du rite funéraire",
+        "Todesritusvogel",
+        "Ave del rito fúnebre",
+        "Uccello del rito funebre",
+        "Ave do rito fúnebre",
+        "Ptak rytuału śmierci",
+        "Птица обряда смерти"
+      ]
+    },
+    "draconic": {
+      "label": "Draconic Tree Sentinel & Royal Cavalrymen",
+      "lords": [
+        "gnoster",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Draconic Tree Sentinel",
+        "Draconic Tree Sentinel & Royal Cavalrymen",
+        "Draconic Tree Sentinel and two Royal Cavalryman",
+        "竜のツリーガード",
+        "용의 트리 가드",
+        "龙装大树守卫",
+        "龍裝大樹守衛",
+        "Sentinelle draconique de l'Arbre",
+        "Drakonische Baumwächterin",
+        "Centinela dracónica del Árbol",
+        "Sentinella draconica dell'Albero",
+        "Sentinela dracônica da Árvore",
+        "Smoczy Strażnik Drzewa",
+        "Драконий страж Древа"
+      ]
+    },
+    "fallingstar": {
+      "label": "Full-Grown Fallingstar Beast",
+      "lords": [
+        "maris",
+        "heolstor"
+      ],
+      "aliases": [
+        "Full-Grown Fallingstar Beast",
+        "Fallingstar Beast",
+        "降る星の成獣",
+        "降る星の獣",
+        "내리는 별의 짐승 성체",
+        "내리는 별의 짐승",
+        "坠星成兽",
+        "墜星成獸",
+        "Bête d'étoile filante adulte",
+        "Ausgewachsene Sternenfallbestie",
+        "Bestia de estrella fugaz adulta",
+        "Bestia della stella cadente adulta",
+        "Fera da estrela cadente adulta",
+        "Dorosła bestia spadającej gwiazdy",
+        "Взрослый зверь падающей звезды"
+      ]
+    },
+    "fell": {
+      "label": "Fell Omen",
+      "lords": [
+        "gladius",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Fell Omen",
+        "Margit",
+        "Margit the Fell Omen",
+        "忌み鬼",
+        "マルギット",
+        "끔찍한 흉조",
+        "악兆요괴",
+        "恶兆妖鬼",
+        "惡兆妖鬼",
+        "Augure réprouvé",
+        "Margit l'Augure réprouvé",
+        "Unheilvolles Omen",
+        "Margit das Unheilvolle Omen",
+        "Augurio vil",
+        "Presagio nefando",
+        "Agouro Vil",
+        "Nikczemna wróżba",
+        "Гибельное знамение",
+        "Маргит"
+      ]
+    },
+    "godskin": {
+      "label": "Godskin Duo",
+      "lords": [
+        "maris",
+        "libra",
+        "caligo",
+        "heolstor"
+      ],
+      "aliases": [
+        "Godskin Duo",
+        "Godskin Apostle",
+        "Godskin Noble",
+        "Godskin Apostle and Godskin Noble",
+        "神肌の貴種",
+        "神肌の使徒",
+        "神肌の双子",
+        "신의 살갗의 귀인",
+        "신의 살갗의 사도",
+        "神皮贵族",
+        "神皮使徒",
+        "神皮双人组",
+        "神皮貴族",
+        "Noble sanctéchaire",
+        "Apôtre sanctéchaire",
+        "Gotteshaut-Adliger",
+        "Gotteshaut-Apostel",
+        "Noble piel de dios",
+        "Apóstol piel de dios",
+        "Nobile pellidia",
+        "Apostolo pellidia",
+        "Nobre da pele divina",
+        "Apóstolo da pele divina",
+        "Szlachetny Boskiej Skóry",
+        "Apostoł Boskiej Skóry",
+        "Вельможа богошкурых",
+        "Апостол богошкурых"
+      ]
+    },
+    "wyrm": {
+      "label": "Great Wyrm",
+      "lords": [
+        "gnoster",
+        "heolstor"
+      ],
+      "aliases": [
+        "Great Wyrm",
+        "大土竜",
+        "대토룡",
+        "大土龙",
+        "大土龍",
+        "Grand wyrm",
+        "Großer Wyrm",
+        "Gran vermis",
+        "Grande wyrm",
+        "Wielki smok ziemny",
+        "Великий змий"
+      ]
+    },
+    "nameless": {
+      "label": "Nameless King",
+      "lords": [
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Nameless King",
+        "無名の王",
+        "이름 없는 왕",
+        "无名王者",
+        "無名王者",
+        "Roi sans nom",
+        "Namenloser König",
+        "Rey innominado",
+        "Re senza nome",
+        "Rei sem nome",
+        "Bezimienny Król",
+        "Безымянный король"
+      ]
+    },
+    "nox": {
+      "label": "Nox Dragonkin Soldier",
+      "lords": [
+        "gnoster",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Nox Dragonkin Soldier",
+        "Dragonkin Soldier",
+        "ノクスの竜人兵",
+        "녹스의 용인병",
+        "诺克斯龙人士兵",
+        "諾克斯龍人士兵",
+        "Soldat draconique de Nox",
+        "Nox-Drachenmensch",
+        "Soldado draconiano de Nox",
+        "Soldato draconico di Nox",
+        "Soldado dracônico de Nox",
+        "Smoczy żołnierz Nox",
+        "Драконий солдат Нокса"
+      ]
+    },
+    "outland": {
+      "label": "Outland Commander",
+      "lords": [
+        "adel",
+        "fulghor",
+        "heolstor"
+      ],
+      "aliases": [
+        "Outland Commander",
+        "僻地の宿将",
+        "벽지의 노장",
+        "外域老将",
+        "外域老將",
+        "Commandant des contrées lointaines",
+        "Kommandant der Einöde",
+        "Comandante de las tierras remotas",
+        "Comandante delle terre remote",
+        "Comandante das terras longínquas",
+        "Dowódca rubieży",
+        "Командир окраин"
+      ]
+    },
+    "treesent": {
+      "label": "Tree Sentinel & Royal Cavalrymen",
+      "lords": [
+        "gladius",
+        "gnoster",
+        "maris",
+        "heolstor"
+      ],
+      "aliases": [
+        "Tree Sentinel",
+        "Tree Sentinel & Royal Cavalrymen",
+        "Tree Sentinel and Royal Cavalrymen",
+        "ツリーガード",
+        "트리 가드",
+        "大树守卫",
+        "大樹守衛",
+        "Sentinelle de l'Arbre",
+        "Baumwächterin",
+        "Centinela del Árbol",
+        "Sentinella dell'Albero",
+        "Sentinela da Árvore",
+        "Strażnik Drzewa",
+        "Страж Древа",
+        "王都の騎兵",
+        "도읍 기병",
+        "王城骑兵",
+        "王城騎兵"
+      ]
+    },
+    "artorias": {
+      "label": "Knight Artorias",
+      "lords": [
+        "dreglord"
+      ],
+      "aliases": [
+        "Knight Artorias",
+        "Artorias",
+        "騎士アルトリウス",
+        "기사 아르토리우스",
+        "骑士亚尔特留斯",
+        "騎士亞爾特留斯",
+        "Chevalier Artorias",
+        "Ritter Artorias",
+        "Caballero Artorias",
+        "Cavaliere Artorias",
+        "Cavaleiro Artorias",
+        "Rycerz Artorias",
+        "Рыцарь Арториас"
+      ]
+    },
+    "lion": {
+      "label": "Divine Beast Dancing Lion",
+      "lords": [
+        "dreglord"
+      ],
+      "aliases": [
+        "Divine Beast Dancing Lion",
+        "Dancing Lion",
+        "神獣獅子舞",
+        "신수 사자춤",
+        "神兽舞狮",
+        "神獸舞獅",
+        "Lion dansant de la bête divine",
+        "Tanzender Löwe der göttlichen Bestie",
+        "León danzante de la bestia divina",
+        "Leone danzante della belva divina",
+        "Leão dançante da fera divina",
+        "Tańczący lew boskiej bestii",
+        "Танцующий лев божественного зверя"
+      ]
+    },
+    "mohg": {
+      "label": "Lord of Blood",
+      "lords": [
+        "balancers"
+      ],
+      "aliases": [
+        "Lord of Blood",
+        "Mohg",
+        "Mohg, Lord of Blood",
+        "Mohg Lord of Blood",
+        "血の君主モーグ",
+        "피의 군주 모그",
+        "鲜血君王",
+        "鮮血君王",
+        "蒙格",
+        "Mohg, Seigneur du Sang",
+        "Mohg, Herr des Blutes",
+        "Mohg, Señor de la Sangre",
+        "Mohg, Signore del Sangue",
+        "Mohg, Senhor do Sangue",
+        "Mohg, Władca Krwi",
+        "Мог, Повелитель Крови"
+      ]
+    },
+    "demonprince": {
+      "label": "Demon Prince",
+      "lords": [
+        "balancers"
+      ],
+      "aliases": [
+        "Demon Prince",
+        "デーモンプリンス",
+        "데몬 프린스",
+        "恶魔王子",
+        "惡魔王子",
+        "Prince démon",
+        "Dämonenprinz",
+        "Príncipe demonio",
+        "Principe demone",
+        "Príncipe demônio",
+        "Książę Demonów",
+        "Принц демонов"
+      ]
+    }
+  }
+}
