@@ -8,7 +8,8 @@
 #   pip install -r requirements.txt
 #   winget install UB-Mannheim.TesseractOCR
 #   winget install JRSoftware.InnoSetup   # optional, for the Setup.exe
-#   powershell -File scripts\build_windows.ps1
+#   scripts\build_windows.cmd
+#   powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\build_windows.ps1
 
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot

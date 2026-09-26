@@ -31,7 +31,13 @@ winget install JRSoftware.InnoSetup   # optional, only for Setup.exe
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-powershell -File scripts\build_windows.ps1
+scripts\build_windows.cmd
+```
+
+If PowerShell refuses `scripts\build_windows.ps1` with “not digitally signed”, that is the machine execution policy (`AllSigned` / `Restricted`). Admin does not override it. Use the `.cmd` wrapper above, or one shot:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\build_windows.ps1
 ```
 
 Outputs:
